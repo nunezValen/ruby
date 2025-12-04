@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_04_023620) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_04_025024) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -54,6 +54,21 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_04_023620) do
     t.index ["genre_id"], name: "index_product_genres_on_genre_id"
     t.index ["product_id", "genre_id"], name: "index_product_genres_on_product_id_and_genre_id", unique: true
     t.index ["product_id"], name: "index_product_genres_on_product_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "author"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.datetime "last_updated_at"
+    t.integer "media_type"
+    t.string "name"
+    t.date "received_on"
+    t.datetime "retired_at"
+    t.integer "state"
+    t.integer "stock"
+    t.decimal "unit_price", precision: 10, scale: 2
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
