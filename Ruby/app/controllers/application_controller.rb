@@ -4,8 +4,9 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:nombre, :apellido, :rol])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:nombre, :apellido, :rol])
+    # Allow only non-role attributes from user sign up / account update.
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:nombre, :apellido])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:nombre, :apellido])
   end
   def user_params
     if current_user.administrador?

@@ -1,4 +1,4 @@
-<%= form_with(model: user) do |form| %>
+<%= form_with(model: user, local: true) do |form| %>
   <% if user.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
@@ -26,10 +26,26 @@
     <%= form.text_field :email %>
   </div>
 
-  <div>
-    <%= form.label :role, style: "display: block" %>
-    <%= form.number_field :role %>
-  </div>
+  <%# Campos de contraseña solo al crear un nuevo usuario %>
+  <% if user.new_record? %>
+    <div>
+      <%= form.label :password, "Contraseña", style: "display: block" %>
+      <%= form.password_field :password %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation, "Confirmar contraseña", style: "display: block" %>
+      <%= form.password_field :password_confirmation %>
+    </div>
+  <% end %>
+
+  <%# show role selector only when creating and when current_user is administrador %>
+  <% if user.new_record? && current_user&.administrador? %>
+    <div>
+      <%= form.label :role, style: "display: block" %>
+      <%= form.select :role, User.roles.keys.map { |k| [k.humanize, k] }, include_blank: false %>
+    </div>
+  <% end %>
 
   <div>
     <%= form.submit %>

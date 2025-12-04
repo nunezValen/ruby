@@ -9,23 +9,27 @@ class Ability
 
     elsif user.gerente?
       # PRODUCTOS y VENTAS → puede hacer todo
-      can :manage, Product
-      can :manage, Sale
+      # TODO: Descomentar cuando se creen los modelos Product y Sale
+      # can :manage, Product
+      # can :manage, Sale
 
       # USUARIOS → puede gestionarlos excepto administradores
       can :read, User
       can [:create, :update, :destroy], User, role: ['gerente', 'empleado']
+      can :index, User  # Puede ver el listado de usuarios
 
       # siempre puede editar SU PROPIA cuenta (excepto el rol)
       can [:read, :update], User, id: user.id
 
     elsif user.empleado?
       # PRODUCTOS y VENTAS → puede hacer todo
-      can :manage, Product
-      can :manage, Sale
+      # TODO: Descomentar cuando se creen los modelos Product y Sale
+      # can :manage, Product
+      # can :manage, Sale
 
-      # USUARIOS → no puede gestionar ninguno
+      # USUARIOS → no puede gestionar ninguno, ni ver el listado
       cannot :manage, User
+      cannot :index, User  # No puede ver el listado de usuarios
 
       # PERO puede editar su propia cuenta (excepto rol)
       can [:read, :update], User, id: user.id
