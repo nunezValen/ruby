@@ -1,0 +1,130 @@
+<%= form_with(model: [:backstore, product], class: "card shadow-sm p-4 border-0", data: { controller: "product-state" }) do |form| %>
+  <% if product.errors.any? %>
+    <div class="alert alert-dark">
+      <h2 class="h5 mb-3"><%= pluralize(product.errors.count, "error") %> impiden guardar el producto:</h2>
+      <ul class="mb-0">
+        <% product.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <%= form.label :name, "Nombre", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :author, "Autor", class: "form-label" %>
+      <%= form.text_field :author, class: "form-control", required: true %>
+    </div>
+
+    <div class="col-md-12">
+      <%= form.label :description, "Descripción", class: "form-label" %>
+      <%= form.text_area :description, rows: 4, class: "form-control", required: true %>
+    </div>
+
+    <div class="col-md-4">
+      <%= form.label :unit_price, "Precio unitario", class: "form-label" %>
+      <%= form.number_field :unit_price, class: "form-control", step: 0.01, min: 0.01, max: 999999.99, required: true %>
+    </div>
+
+    <div class="col-md-4">
+      <%= form.label :stock, "Stock disponible", class: "form-label" %>
+      <%= form.number_field :stock, class: "form-control", min: 0, max: 999999, data: { product_state_target: "stockField" } %>
+      <p class="small text-muted mb-0 mt-1">Los productos usados tienen stock fijo de 1 unidad</p>
+    </div>
+
+    <div class="col-md-4">
+      <%= form.label :received_on, "Fecha de ingreso", class: "form-label" %>
+      <%= form.date_field :received_on, class: "form-control", max: Date.today, required: true %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :media_type, "Tipo de medio", class: "form-label" %>
+      <%= form.select :media_type,
+            options_for_select([["Vinilo", :vinyl], ["CD", :cd]], product.media_type),
+            { prompt: "Seleccionar..." },
+            class: "form-select",
+            required: true %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :state, "Estado", class: "form-label" %>
+      <%= form.select :state,
+            options_for_select([["Nuevo", :new_item], ["Usado", :used_item]], product.state),
+            { prompt: "Seleccionar..." },
+            class: "form-select",
+            required: true,
+            data: { product_state_target: "stateSelect", action: "change->product-state#updateFields" } %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :image, "Imagen principal *", class: "form-label" %>
+      <%= form.file_field :image, class: "form-control", accept: "image/jpeg,image/jpg,image/png,image/gif,image/webp", required: !product.image.attached? %>
+      <p class="small text-muted mb-0 mt-1">Obligatorio. Máximo 10 MB. Formatos: JPG, PNG, GIF, WebP</p>
+      <% if product.image.attached? %>
+        <p class="mt-1 mb-0 small">Imagen actual: <%= product.image.filename %></p>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :genre_ids, "Géneros *", class: "form-label d-block" %>
+      <p class="small text-muted mb-2">Debe seleccionar al menos un género</p>
+      <div data-controller="genre-picker">
+        <%= form.select :genre_ids,
+                        options_from_collection_for_select(Genre.order(:name), :id, :name, product.genre_ids),
+                        { include_blank: "Seleccionar género..." },
+                        class: "form-select d-none",
+                        multiple: true,
+                        data: { genre_picker_target: "select" } %>
+        
+        <div class="input-group mb-3">
+          <select class="form-select" data-genre-picker-target="dropdown">
+            <option value="">Seleccionar género...</option>
+            <% Genre.order(:name).each do |genre| %>
+              <option value="<%= genre.id %>"><%= genre.name %></option>
+            <% end %>
+          </select>
+          <button type="button" class="btn btn-primary" data-action="click->genre-picker#add">
+            Agregar
+          </button>
+        </div>
+
+        <div class="mt-2">
+          <p class="fw-semibold mb-2 small">Seleccionados:</p>
+          <div class="d-flex flex-wrap gap-2" data-genre-picker-target="list">
+            <% if product.genre_ids.empty? %>
+              <span class="text-muted small">Ninguno</span>
+            <% end %>
+          </div>
+        </div>
+        
+        <template data-genre-picker-target="template">
+          <span class="genre-pill d-flex align-items-center gap-2">
+            <span data-genre-name></span>
+            <button type="button" class="btn-close btn-sm" aria-label="Quitar" 
+                    data-action="click->genre-picker#remove" data-value=""
+                    style="filter: invert(1);"></button>
+          </span>
+        </template>
+      </div>
+    </div>
+
+    <div class="col-md-6 <%= 'd-none' unless product.state_used_item? %>" data-product-state-target="audioField">
+      <%= form.label :audio_preview, "Audio de muestra (obligatorio para usados)", class: "form-label" %>
+      <%= form.file_field :audio_preview, class: "form-control", accept: "audio/*" %>
+      <p class="small text-muted mb-0 mt-1">Máximo 5 MB. Formatos: MP3, WAV, OGG</p>
+      <% if product.audio_preview.attached? %>
+        <p class="mt-2 mb-0 small">Audio actual: <%= product.audio_preview.filename %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex justify-content-end gap-3">
+    <%= link_to "Cancelar", backstore_products_path, class: "btn btn-outline-dark" %>
+    <%= form.submit class: "btn btn-primary px-4" %>
+  </div>
+<% end %>

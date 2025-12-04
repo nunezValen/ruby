@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Productos</h1>
+  <%= link_to "Nuevo producto", new_backstore_product_path, class: "btn btn-primary" %>
+</div>
+
+<div class="filter-links mb-3 d-flex gap-3">
+  <%= link_to "Activos", backstore_products_path(filter: :active),
+              class: "btn btn-outline-dark#{@filter == 'active' ? ' active' : ''}" %>
+  <%= link_to "Dados de baja", backstore_products_path(filter: :retired),
+              class: "btn btn-outline-dark#{@filter == 'retired' ? ' active' : ''}" %>
+</div>
+
+<% if @products.any? %>
+  <div class="table-responsive card shadow-sm">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Stock</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <tr>
+            <td>
+              <strong><%= product.name %></strong>
+              <div class="small text-muted">Autor: <%= product.author %></div>
+            </td>
+            <td><%= product.stock %></td>
+            <td>
+              <% if product.retired_at? %>
+                <span class="genre-pill">Baja <%= product.retired_at&.strftime("%d/%m/%Y") %></span>
+              <% else %>
+                <span class="genre-pill">Activo</span>
+              <% end %>
+            </td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-2">
+                <%= link_to "Ver", [:backstore, product], class: "btn btn-outline-dark btn-sm" %>
+                <%= link_to "Editar", edit_backstore_product_path(product), class: "btn btn-outline-dark btn-sm" %>
+              </div>
+              <%= form_with url: update_stock_backstore_product_path(product), method: :patch, class: "d-inline-flex align-items-center gap-2 ms-3", local: true do |f| %>
+                <%= f.number_field :amount, value: 0, class: "form-control form-control-sm", style: "width: 80px;", required: true %>
+                <%= f.submit "Stock", class: "btn btn-primary btn-sm" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="card shadow-sm p-4 text-center">
+    <p class="mb-0">No hay productos en este filtro.</p>
+  </div>
+<% end %>

@@ -1,4 +1,4 @@
-class GenresController < ApplicationController
+class Backstore::GenresController < ApplicationController
   before_action :set_genre, only: %i[ show edit update destroy ]
 
   # GET /genres or /genres.json
@@ -25,8 +25,8 @@ class GenresController < ApplicationController
 
     respond_to do |format|
       if @genre.save
-        format.html { redirect_to @genre, notice: "Género creado correctamente." }
-        format.json { render :show, status: :created, location: @genre }
+        format.html { redirect_to [:backstore, @genre], notice: "Género creado correctamente." }
+        format.json { render :show, status: :created, location: [:backstore, @genre] }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @genre.errors, status: :unprocessable_entity }
@@ -38,8 +38,8 @@ class GenresController < ApplicationController
   def update
     respond_to do |format|
       if @genre.update(genre_params)
-        format.html { redirect_to @genre, notice: "Género actualizado correctamente.", status: :see_other }
-        format.json { render :show, status: :ok, location: @genre }
+        format.html { redirect_to [:backstore, @genre], notice: "Género actualizado correctamente.", status: :see_other }
+        format.json { render :show, status: :ok, location: [:backstore, @genre] }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @genre.errors, status: :unprocessable_entity }
@@ -52,9 +52,9 @@ class GenresController < ApplicationController
     respond_to do |format|
       begin
         @genre.destroy!
-        format.html { redirect_to genres_path, notice: "Género eliminado correctamente.", status: :see_other }
+        format.html { redirect_to backstore_genres_path, notice: "Género eliminado correctamente.", status: :see_other }
       rescue ActiveRecord::DeleteRestrictionError
-        format.html { redirect_to genres_path, alert: "No se puede eliminar este género porque tiene productos asociados." }
+        format.html { redirect_to backstore_genres_path, alert: "No se puede eliminar este género porque tiene productos asociados." }
       end
     end
   end  
