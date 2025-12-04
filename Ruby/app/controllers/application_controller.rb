@@ -13,7 +13,15 @@ class ApplicationController < ActionController::Base
       params.require(:user).permit(:nombre, :apellido, :email, :role)
     else
       params.require(:user).permit(:nombre, :apellido, :email) # sin role
-    end 
+    end
+  end
+
+  def home
+    if user_signed_in?
+      redirect_to backstore_products_path
+    else
+      redirect_to new_user_session_path
+    end
   end
 
 end

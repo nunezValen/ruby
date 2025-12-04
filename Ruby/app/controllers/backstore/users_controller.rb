@@ -1,48 +1,48 @@
-class UsersController < ApplicationController
+class Backstore::UsersController < Backstore::BaseController
   before_action :set_user, only: %i[ show edit update destroy ]
   load_and_authorize_resource
 
-  # GET /users or /users.json
+  # GET /backstore/users or /backstore/users.json
   def index
     @users = User.all
   end
 
-  # GET /users/1 or /users/1.json
+  # GET /backstore/users/1 or /backstore/users/1.json
   def show
   end
 
-  # GET /users/new
+  # GET /backstore/users/new
   def new
     @user = User.new
   end
 
-  # GET /users/1/edit
+  # GET /backstore/users/1/edit
   def edit
   end
 
-  # POST /users or /users.json
+  # POST /backstore/users or /backstore/users.json
   def create
     @user = User.new(user_params)
-    Rails.logger.debug("[UsersController#create] params: #{params[:user].inspect}")
+    Rails.logger.debug("[Backstore::UsersController#create] params: #{params[:user].inspect}")
     authorize! :create, @user
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
+        format.html { redirect_to backstore_user_path(@user), notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
-        Rails.logger.debug("[UsersController#create] errors: #{@user.errors.full_messages.inspect}")
+        Rails.logger.debug("[Backstore::UsersController#create] errors: #{@user.errors.full_messages.inspect}")
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /users/1 or /users/1.json
+  # PATCH/PUT /backstore/users/1 or /backstore/users/1.json
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: "User was successfully updated.", status: :see_other }
+        format.html { redirect_to backstore_user_path(@user), notice: "User was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -51,12 +51,12 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1 or /users/1.json
+  # DELETE /backstore/users/1 or /backstore/users/1.json
   def destroy
     @user.destroy!
 
     respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
+      format.html { redirect_to backstore_users_path, notice: "User was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end

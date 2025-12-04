@@ -8,11 +8,8 @@ Rails.application.routes.draw do
   #   post 'sign_up', to: 'devise/registrations#create', as: :user_registration
   # end
 
-  # Define el root - redirige a usuarios si está logueado, sino a login
-  root to: 'users#index'
-
-  # luego tus recursos de usuarios
-  resources :users
+  # Define el root - página de inicio que redirige según autenticación
+  root to: 'application#home'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Storefront público
@@ -30,7 +27,6 @@ Rails.application.routes.draw do
     end
 
     resources :genres
+    resources :users
   end
-
-  root "backstore/products#index"
 end

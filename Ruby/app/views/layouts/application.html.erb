@@ -19,43 +19,6 @@
     <%= javascript_importmap_tags %>
   </head>
 
-<<<<<<< HEAD
-  <body>
-    <%# Barra de navegación siempre visible %>
-    <nav style="padding: 15px; background-color: #4a90e2; color: white; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-      <div style="display: flex; align-items: center; gap: 20px;">
-        <%# Logo o título de la app %>
-        <strong style="font-size: 1.2em;">Ruby App</strong>
-        
-        <%# Botón para listado de usuarios (solo si tiene permiso) %>
-        <% if user_signed_in? && can?(:index, User) %>
-          <%= link_to "Usuarios", users_path, style: "color: white; text-decoration: none; padding: 8px 15px; background-color: rgba(255,255,255,0.2); border-radius: 4px; transition: background-color 0.3s;" %>
-        <% end %>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <% if user_signed_in? %>
-          <%# Botón para editar perfil propio %>
-          <%= link_to "Mi Perfil", edit_user_path(current_user), style: "color: white; text-decoration: none; padding: 8px 15px; background-color: rgba(255,255,255,0.2); border-radius: 4px; transition: background-color 0.3s;" %>
-          
-          <%# Información del usuario %>
-          <span style="font-size: 0.9em;">
-            <%= current_user.email %>
-            <% if current_user.respond_to?(:nombre) && current_user.nombre.present? %>
-              (<%= current_user.nombre %> <%= current_user.apellido %>)
-            <% end %>
-          </span>
-          <%# Botón para cerrar sesión %>
-          <%= button_to "Cerrar sesión", destroy_user_session_path, method: :delete, style: "background-color: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.9em; transition: background-color 0.3s;" %>
-        <% else %>
-          <%# Botón para iniciar sesión %>
-          <%= link_to "Iniciar sesión", new_user_session_path, style: "color: white; text-decoration: none; padding: 8px 15px; background-color: #27ae60; border-radius: 4px; transition: background-color 0.3s;" %>
-        <% end %>
-      </div>
-    </nav>
-
-    <%= yield %>
-=======
   <body class="app-body">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
       <div class="container py-2">
@@ -71,7 +34,18 @@
             <li class="nav-item">
               <%= link_to "Géneros", backstore_genres_path, class: "nav-link#{current_page?(backstore_genres_path) ? ' active' : ''}" %>
             </li>
+            <li class="nav-item">
+              <%= link_to "Usuarios", backstore_users_path, class: "nav-link#{current_page?(backstore_users_path) ? ' active' : ''}" %>
+            </li>
           </ul>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <% if user_signed_in? %>
+            <%= link_to "Mi Perfil", edit_backstore_user_path(current_user), class: "btn btn-outline-light" %>
+            <%= button_to "Cerrar sesión", destroy_user_session_path, method: :delete, class: "btn btn-outline-light" %>
+          <% else %>
+            <%= link_to "Iniciar sesión", new_user_session_path, class: "btn btn-outline-light" %>
+          <% end %>
         </div>
       </div>
     </nav>
@@ -80,6 +54,5 @@
       <%= render "shared/flash" %>
       <%= yield %>
     </main>
->>>>>>> feature/productos
   </body>
 </html>
