@@ -1,0 +1,6 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Nuevo producto</h1>
+  <%= link_to "Volver", backstore_products_path, class: "btn btn-outline-dark" %>
+</div>
+
+<%= render "form", product: @product %>

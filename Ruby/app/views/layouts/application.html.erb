@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <title><%= content_for(:title) || "Ruby" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Ruby">
     <meta name="mobile-web-app-capable" content="yes">
@@ -11,18 +11,15 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
+<<<<<<< HEAD
   <body>
     <%# Barra de navegación siempre visible %>
     <nav style="padding: 15px; background-color: #4a90e2; color: white; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -58,5 +55,31 @@
     </nav>
 
     <%= yield %>
+=======
+  <body class="app-body">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+      <div class="container py-2">
+        <%= link_to "DiscoStore", root_path, class: "navbar-brand" %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto gap-2">
+            <li class="nav-item">
+              <%= link_to "Inventario", backstore_products_path, class: "nav-link#{current_page?(backstore_products_path) ? ' active' : ''}" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Géneros", backstore_genres_path, class: "nav-link#{current_page?(backstore_genres_path) ? ' active' : ''}" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container py-4">
+      <%= render "shared/flash" %>
+      <%= yield %>
+    </main>
+>>>>>>> feature/productos
   </body>
 </html>
