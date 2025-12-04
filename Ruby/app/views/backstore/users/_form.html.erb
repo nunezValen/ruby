@@ -1,9 +1,8 @@
-<%= form_with(model: user, url: user.new_record? ? backstore_users_path : backstore_user_path(user), local: true) do |form| %>
+<%= form_with(model: user, url: user.new_record? ? backstore_users_path : backstore_user_path(user), class: "card shadow-sm p-4 border-0", local: true) do |form| %>
   <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h2 class="h5 mb-3"><%= pluralize(user.errors.count, "error") %> impiden guardar el usuario:</h2>
+      <ul class="mb-0">
         <% user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,43 +10,45 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :nombre, style: "display: block" %>
-    <%= form.text_field :nombre %>
-  </div>
-
-  <div>
-    <%= form.label :apellido, style: "display: block" %>
-    <%= form.text_field :apellido %>
-  </div>
-
-  <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.text_field :email %>
-  </div>
-
-  <%# Campos de contraseña solo al crear un nuevo usuario %>
-  <% if user.new_record? %>
-    <div>
-      <%= form.label :password, "Contraseña", style: "display: block" %>
-      <%= form.password_field :password %>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <%= form.label :nombre, "Nombre", class: "form-label" %>
+      <%= form.text_field :nombre, class: "form-control", required: true %>
     </div>
 
-    <div>
-      <%= form.label :password_confirmation, "Confirmar contraseña", style: "display: block" %>
-      <%= form.password_field :password_confirmation %>
+    <div class="col-md-6">
+      <%= form.label :apellido, "Apellido", class: "form-label" %>
+      <%= form.text_field :apellido, class: "form-control", required: true %>
     </div>
-  <% end %>
 
-  <%# show role selector only when creating and when current_user is administrador %>
-  <% if user.new_record? && current_user&.administrador? %>
-    <div>
-      <%= form.label :role, style: "display: block" %>
-      <%= form.select :role, User.roles.keys.map { |k| [k.humanize, k] }, include_blank: false %>
+    <div class="col-md-12">
+      <%= form.label :email, "Email", class: "form-label" %>
+      <%= form.text_field :email, class: "form-control", type: "email", required: true %>
     </div>
-  <% end %>
 
-  <div>
-    <%= form.submit %>
+    <%# Campos de contraseña solo al crear un nuevo usuario %>
+    <% if user.new_record? %>
+      <div class="col-md-6">
+        <%= form.label :password, "Contraseña", class: "form-label" %>
+        <%= form.password_field :password, class: "form-control", required: true %>
+      </div>
+
+      <div class="col-md-6">
+        <%= form.label :password_confirmation, "Confirmar contraseña", class: "form-label" %>
+        <%= form.password_field :password_confirmation, class: "form-control", required: true %>
+      </div>
+    <% end %>
+
+    <%# show role selector only when creating and when current_user is administrador %>
+    <% if user.new_record? && current_user&.administrador? %>
+      <div class="col-md-12">
+        <%= form.label :role, "Rol", class: "form-label" %>
+        <%= form.select :role, User.roles.keys.map { |k| [k.humanize, k] }, include_blank: false, class: "form-select" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-4">
+    <%= form.submit user.new_record? ? "Crear usuario" : "Actualizar usuario", class: "btn btn-primary" %>
   </div>
 <% end %>

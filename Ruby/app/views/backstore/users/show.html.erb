@@ -1,13 +1,71 @@
-<p style="color: green"><%= notice %></p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0"><%= @user.nombre %> <%= @user.apellido %></h1>
+  <div class="d-flex gap-2">
+    <%= link_to "Volver", backstore_users_path, class: "btn btn-outline-dark" %>
+    <%= link_to "Editar", edit_backstore_user_path(@user), class: "btn btn-primary" %>
+  </div>
+</div>
 
-<%= render @user %>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm p-4 h-100">
+      <table class="table mb-4">
+        <tbody>
+          <tr>
+            <th scope="row">Nombre</th>
+            <td><%= @user.nombre %></td>
+          </tr>
+          <tr>
+            <th scope="row">Apellido</th>
+            <td><%= @user.apellido %></td>
+          </tr>
+          <tr>
+            <th scope="row">Email</th>
+            <td><%= @user.email %></td>
+          </tr>
+          <tr>
+            <th scope="row">Rol</th>
+            <td>
+              <span class="genre-pill"><%= @user.role&.humanize || 'Sin rol' %></span>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Fecha de creación</th>
+            <td><%= l(@user.created_at, format: :short) %></td>
+          </tr>
+          <tr>
+            <th scope="row">Última modificación</th>
+            <td><%= l(@user.updated_at, format: :short) %></td>
+          </tr>
+          <% if @user.reset_password_sent_at %>
+            <tr>
+              <th scope="row">Reset password enviado</th>
+              <td><%= l(@user.reset_password_sent_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
 
-<div>
-  <%= link_to "Edit this user", edit_backstore_user_path(@user) %> |
-  <%= link_to "Back to users", backstore_users_path %>
+      <div class="d-flex gap-2">
+        <%# Si tengo permiso para destruir el usuario Y si no soy el usuario que estoy viendo %>
+        <% if can?(:destroy, @user) && @user.id != current_user.id %>
+          <%= button_to "Eliminar usuario", backstore_user_path(@user), method: :delete, 
+                        class: "btn btn-danger",
+                        data: { confirm: "¿Estás seguro de que quieres eliminar este usuario?" } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-  <%# Si tengo permiso para destruir el usuario Y si no soy el usuario que estoy viendo %>
-  <% if can?(:destroy, @user) && @user.id != current_user.id %>
-    <%= button_to "Destroy this user", backstore_user_path(@user), method: :delete, data: { confirm: "Are you sure you want to destroy this user?" } %>
-  <% end %>
+  <div class="col-lg-4">
+    <div class="card shadow-sm p-4">
+      <h2 class="h5 mb-3">Estado de la cuenta</h2>
+      <div class="mt-4">
+        <h3 class="h6 mb-2">Información adicional</h3>
+        <p class="text-muted small mb-0">
+          ID de usuario: <code><%= @user.id %></code>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,16 +1,49 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Users" %>
-
-<h1>Users</h1>
-
-<div id="users">
-  <% @users.each do |user| %>
-    <%= render user %>
-    <p>
-      <%= link_to "Show this user", backstore_user_path(user) %>
-    </p>
-  <% end %>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Usuarios</h1>
+  <%= link_to "Nuevo usuario", new_backstore_user_path, class: "btn btn-primary" %>
 </div>
 
-<%= link_to "New user", new_backstore_user_path %>
+<% if @users.any? %>
+  <div class="table-responsive card shadow-sm">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td>
+              <strong><%= user.nombre %> <%= user.apellido %></strong>
+            </td>
+            <td><%= user.email %></td>
+            <td>
+              <span class="genre-pill"><%= user.role&.humanize || 'Sin rol' %></span>
+            </td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-2">
+                <%= link_to "Ver", backstore_user_path(user), class: "btn btn-outline-dark btn-sm" %>
+                <%= link_to "Editar", edit_backstore_user_path(user), class: "btn btn-outline-dark btn-sm" %>
+              </div>
+              <% if can?(:destroy, user) && user.id != current_user.id %>
+                <div class="d-inline-flex gap-2 ms-3">
+                  <%= button_to "Eliminar", backstore_user_path(user), method: :delete, 
+                                class: "btn btn-danger btn-sm",
+                                data: { confirm: "¿Estás seguro de que quieres eliminar este usuario?" } %>
+                </div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="card shadow-sm p-4 text-center">
+    <p class="mb-0">No hay usuarios registrados.</p>
+  </div>
+<% end %>
