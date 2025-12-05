@@ -44,6 +44,7 @@ class Product < ApplicationRecord
   # ---------------------------
   # Callbacks
   # ---------------------------
+  before_validation :set_received_on_default, on: :create
   before_validation :normalize_stock_rules
   before_save :touch_last_inventory_change, if: :will_save_change_to_stock?
 
@@ -153,5 +154,10 @@ class Product < ApplicationRecord
   # Registrar última modificación del stock
   def touch_last_inventory_change
     self.last_updated_at = Time.current
+  end
+
+  # Fecha de ingreso automática en la creación
+  def set_received_on_default
+    self.received_on ||= Date.today
   end
 end

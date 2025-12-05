@@ -38,21 +38,28 @@
     </div>
 
     <div class="col-md-4">
-      <%= form.label :received_on, "Fecha de ingreso", class: "form-label" %>
-      <%= form.date_field :received_on, class: "form-control", max: Date.today, required: true %>
+      <%= form.label :media_type, "Tipo", class: "form-label" %>
+      <%= form.select :media_type,
+            options_for_select([["Vinilo", :vinyl], ["CD", :cd]], product.media_type),
+            { prompt: "Seleccionar..." },
+            class: "form-select",
+            required: true %>
     </div>
 
     
 
-    <div class="col-md-6">
-      <%= form.label :state, "Estado", class: "form-label" %>
-      <%= form.select :state,
-            options_for_select([["Nuevo", :new_item], ["Usado", :used_item]], product.state),
-            { prompt: "Seleccionar..." },
-            class: "form-select",
-            required: true,
-            data: { product_state_target: "stateSelect", action: "change->product-state#updateFields" } %>
-    </div>
+    <% unless product.persisted? %>
+      <div class="col-md-6">
+        <%= form.label :state, "Estado", class: "form-label" %>
+
+        <%= form.select :state,
+              options_for_select([["Nuevo", :new_item], ["Usado", :used_item]], product.state),
+              { prompt: "Seleccionar..." },
+              class: "form-select",
+              required: true,
+              data: { product_state_target: "stateSelect", action: "change->product-state#updateFields" } %>
+      </div>
+    <% end %>
 
     <div class="col-md-6">
       <%= form.label :image, "Imagen principal *", class: "form-label" %>
@@ -65,7 +72,6 @@
 
     <div class="col-md-6">
       <%= form.label :genre_ids, "Géneros *", class: "form-label d-block" %>
-      <p class="small text-muted mb-2">Debe seleccionar al menos un género</p>
       <div data-controller="genre-picker">
         <%= form.select :genre_ids,
                         options_from_collection_for_select(Genre.order(:name), :id, :name, product.genre_ids),

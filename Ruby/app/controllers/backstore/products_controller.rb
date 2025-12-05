@@ -23,7 +23,7 @@ class Backstore::ProductsController < Backstore::BaseController
 
   # POST /products or /products.json
   def create
-    @product = Product.new(product_params)
+    @product = Product.new(product_create_params)
 
     respond_to do |format|
       if @product.save
@@ -39,7 +39,7 @@ class Backstore::ProductsController < Backstore::BaseController
   # PATCH/PUT /products/1 or /products/1.json
   def update
     respond_to do |format|
-      if @product.update(product_params)
+      if @product.update(product_update_params)
         format.html { redirect_to [:backstore, @product], notice: "Producto actualizado correctamente.", status: :see_other }
         format.json { render :show, status: :ok, location: [:backstore, @product] }
       else
@@ -80,10 +80,21 @@ class Backstore::ProductsController < Backstore::BaseController
     end
 
     # Only allow a list of trusted parameters through.
-    def product_params
+    # Create: permite definir estado
+    def product_create_params
       params.require(:product).permit(
         :name, :description, :author, :unit_price, :stock,
-        :media_type, :state, :received_on,
+        :media_type, :state,
+        :image, :audio_preview,
+        genre_ids: []
+      )
+    end
+
+    # Update: NO permite cambiar el estado (nuevo/usado)
+    def product_update_params
+      params.require(:product).permit(
+        :name, :description, :author, :unit_price, :stock,
+        :media_type,
         :image, :audio_preview,
         genre_ids: []
       )
