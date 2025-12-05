@@ -1,5 +1,5 @@
 class Backstore::ProductsController < Backstore::BaseController
-  before_action :set_product, only: %i[ show edit update destroy soft_delete restore update_stock ]
+  before_action :set_product, only: %i[ show edit update destroy soft_delete update_stock ]
 
   # GET /products or /products.json
   def index
@@ -62,11 +62,6 @@ class Backstore::ProductsController < Backstore::BaseController
   def soft_delete
     @product.soft_delete!
     redirect_to backstore_products_path, notice: "Producto dado de baja"
-  end
-
-  def restore
-    @product.restore!
-    redirect_to backstore_products_path, notice: "Producto restaurado"
   end
 
   def update_stock

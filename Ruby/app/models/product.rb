@@ -39,6 +39,7 @@ class Product < ApplicationRecord
   validate :image_presence
   validate :image_format_and_size
   validate :at_least_one_genre
+  validate :retired_cannot_be_reverted, on: :update
 
   # ---------------------------
   # Callbacks
@@ -49,18 +50,24 @@ class Product < ApplicationRecord
   # ---------------------------
   # Scopes
   # ---------------------------
-  scope :active,  -> { where(retired_at: nil) }
-  scope :retired, -> { where.not(retired_at: nil) }
+  scope :active,  -> { where(retired: false) }
+  scope :retired, -> { where(retired: true) }
 
   # ---------------------------
   # Métodos de dominio
   # ---------------------------
   def soft_delete!
-    update!(retired_at: Time.current, stock: 0)
-  end
+    return if retired?
 
-  def restore!
-    update!(retired_at: nil)
+    # Forzar baja lógica sin pasar por validaciones/callbacks
+    current_time = Time.current
+    update_columns(
+      retired: true,
+      retired_at: current_time,
+      stock: 0,
+      last_updated_at: current_time,
+      updated_at: current_time
+    )
   end
 
   def change_stock!(amount)
@@ -76,6 +83,8 @@ class Product < ApplicationRecord
   # Usados → stock = 1 y audio obligatorio
   # Nuevos → stock >= 0 y sin audio
   def normalize_stock_rules
+    return if retired?
+
     if state_used_item?
       self.stock = 1
     else
@@ -131,6 +140,13 @@ class Product < ApplicationRecord
   def at_least_one_genre
     if genres.empty?
       errors.add(:genres, "debe tener al menos un género asociado")
+    end
+  end
+
+  # Un producto dado de baja no puede volver a estar activo
+  def retired_cannot_be_reverted
+    if retired_in_database == true && retired == false
+      errors.add(:retired, "no puede volver a estar activo una vez dado de baja")
     end
   end
 

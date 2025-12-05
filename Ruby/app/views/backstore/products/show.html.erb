@@ -62,12 +62,11 @@
       </div>
 
       <div class="d-flex gap-2">
-        <% if @product.retired_at? %>
-          <%= button_to "Restaurar", restore_backstore_product_path(@product), method: :patch, class: "btn btn-primary", data: { turbo_confirm: "¿Restaurar este producto?" } %>
-        <% else %>
+        <% unless @product.retired? %>
           <%= button_to "Dar de baja", soft_delete_backstore_product_path(@product), method: :patch, class: "btn btn-primary", data: { turbo_confirm: "¿Dar de baja este producto?" } %>
+        <% else %>
+          <span class="badge bg-secondary align-self-center">Producto dado de baja</span>
         <% end %>
-        <%= button_to "Eliminar", backstore_product_path(@product), method: :delete, class: "btn btn-outline-dark", data: { turbo_confirm: "¿Eliminar definitivamente?" } %>
       </div>
     </div>
   </div>
