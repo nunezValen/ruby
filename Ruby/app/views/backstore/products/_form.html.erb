@@ -60,15 +60,6 @@
             required: true %>
     </div>
 
-    <div class="col-md-6">
-      <%= form.label :media_type, "Tipo de medio", class: "form-label" %>
-      <%= form.select :media_type,
-            options_for_select([["Vinilo", :vinyl], ["CD", :cd]], product.media_type),
-            { prompt: "Seleccionar..." },
-            class: "form-select",
-            required: true %>
-    </div>
-
     <% unless product.persisted? %>
       <div class="col-md-6">
         <%= form.label :state, "Estado", class: "form-label" %>
