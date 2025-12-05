@@ -39,12 +39,12 @@
             </li>
           </ul>
 
-          <div class="d-flex align-items-center gap-2 w-100 w-lg-auto ms-lg-3 mt-3 mt-lg-0">
+          <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
             <% if user_signed_in? %>
               <%= link_to "Mi Perfil", edit_backstore_user_path(current_user), class: "btn btn-outline-light w-100 w-lg-auto" %>
             <% end %>
           </div>
-          <div class="d-flex align-items-center gap-2 w-100 w-lg-auto ms-lg-3 mt-3 mt-lg-0">
+          <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
             <% if user_signed_in? %>
               <%= button_to "Cerrar sesión", destroy_user_session_path, method: :delete, class: "btn btn-outline-light w-100 w-lg-auto" %>
             <% else %>
