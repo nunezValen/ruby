@@ -86,11 +86,19 @@ class Backstore::ProductsController < Backstore::BaseController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(
+      permitted = params.require(:product).permit(
         :name, :description, :author, :unit_price, :stock,
         :media_type, :state, :received_on,
-        :image, :audio_preview,
+        :cover_image, :audio_preview,
+        gallery: [],
         genre_ids: []
       )
+      
+      # Filtrar valores vacíos del array gallery
+      if permitted[:gallery].present?
+        permitted[:gallery] = permitted[:gallery].reject(&:blank?)
+      end
+      
+      permitted
     end
 end

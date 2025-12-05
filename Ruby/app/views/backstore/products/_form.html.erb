@@ -42,7 +42,14 @@
       <%= form.date_field :received_on, class: "form-control", max: Date.today, required: true %>
     </div>
 
-    
+    <div class="col-md-6">
+      <%= form.label :media_type, "Tipo de medio", class: "form-label" %>
+      <%= form.select :media_type,
+            options_for_select([["Vinilo", :vinyl], ["CD", :cd]], product.media_type),
+            { prompt: "Seleccionar..." },
+            class: "form-select",
+            required: true %>
+    </div>
 
     <div class="col-md-6">
       <%= form.label :state, "Estado", class: "form-label" %>
@@ -55,11 +62,20 @@
     </div>
 
     <div class="col-md-6">
-      <%= form.label :image, "Imagen principal *", class: "form-label" %>
-      <%= form.file_field :image, class: "form-control", accept: "image/jpeg,image/jpg,image/png,image/gif,image/webp", required: !product.image.attached? %>
+      <%= form.label :cover_image, "Imagen de portada *", class: "form-label" %>
+      <%= form.file_field :cover_image, class: "form-control", accept: "image/jpeg,image/jpg,image/png,image/gif,image/webp", required: !product.cover_image.attached? %>
       <p class="small text-muted mb-0 mt-1">Obligatorio. Máximo 10 MB. Formatos: JPG, PNG, GIF, WebP</p>
-      <% if product.image.attached? %>
-        <p class="mt-1 mb-0 small">Imagen actual: <%= product.image.filename %></p>
+      <% if product.cover_image.attached? %>
+        <p class="mt-1 mb-0 small">Imagen actual: <%= product.cover_image.filename %></p>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :gallery, "Galería de imágenes", class: "form-label" %>
+      <%= form.file_field :gallery, class: "form-control", accept: "image/jpeg,image/jpg,image/png,image/gif,image/webp", multiple: true %>
+      <p class="small text-muted mb-0 mt-1">Opcional. Máximo 5 imágenes. Máximo 10 MB por imagen. Formatos: JPG, PNG, GIF, WebP. Tenes que elegir todas a la vez.</p>
+      <% if product.gallery.attached? %>
+        <p class="mt-1 mb-0 small">Imágenes actuales: <%= product.gallery.count %> de 5</p>
       <% end %>
     </div>
 
@@ -118,6 +134,6 @@
 
   <div class="mt-4 d-flex justify-content-end gap-3">
     <%= link_to "Cancelar", backstore_products_path, class: "btn btn-outline-dark" %>
-    <%= form.submit class: "btn btn-primary px-4" %>
+    <%= form.submit product.new_record? ? "Crear producto" : "Actualizar producto", class: "btn btn-primary px-4" %>
   </div>
 <% end %>

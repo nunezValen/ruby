@@ -5,8 +5,10 @@ class Product < ApplicationRecord
   has_many :product_genres, dependent: :destroy
   has_many :genres, through: :product_genres
 
-  # Temporalmente solo una imagen
-  has_one_attached :image
+  # Imagen de portada (una sola)
+  has_one_attached :cover_image
+  # Galería de imágenes (múltiples)
+  has_many_attached :gallery
   has_one_attached :audio_preview
 
   # ---------------------------
@@ -36,8 +38,10 @@ class Product < ApplicationRecord
   validate :new_items_cannot_have_audio
   validate :received_on_cannot_be_future
   validate :audio_file_size
-  validate :image_presence
-  validate :image_format_and_size
+  validate :cover_image_presence
+  validate :cover_image_format_and_size
+  validate :gallery_format_and_size
+  validate :gallery_maximum_count
   validate :at_least_one_genre
 
   # ---------------------------
@@ -107,24 +111,52 @@ class Product < ApplicationRecord
     end
   end
 
-  def image_presence
-    unless image.attached?
-      errors.add(:image, "es obligatoria")
+  def cover_image_presence
+    unless cover_image.attached?
+      errors.add(:cover_image, "es obligatoria")
     end
   end
 
-  def image_format_and_size
-    if image.attached?
+  def cover_image_format_and_size
+    if cover_image.attached?
       # Verificar formato
       acceptable_types = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
-      unless acceptable_types.include?(image.content_type)
-        errors.add(:image, "debe ser JPG, PNG, GIF o WebP")
+      unless acceptable_types.include?(cover_image.content_type)
+        errors.add(:cover_image, "debe ser JPG, PNG, GIF o WebP")
       end
 
       # Verificar tamaño (máximo 10 MB)
-      if image.blob.byte_size > 10.megabytes
-        errors.add(:image, "debe pesar menos de 10 MB")
+      if cover_image.blob.byte_size > 10.megabytes
+        errors.add(:cover_image, "debe pesar menos de 10 MB")
       end
+    end
+  end
+
+  def gallery_format_and_size
+    if gallery.attached?
+      gallery.each do |image|
+        # Verificar formato
+        acceptable_types = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
+        unless acceptable_types.include?(image.content_type)
+          errors.add(:gallery, "debe contener solo imágenes JPG, PNG, GIF o WebP")
+          break
+        end
+
+        # Verificar tamaño (máximo 10 MB por imagen)
+        if image.blob.byte_size > 10.megabytes
+          errors.add(:gallery, "cada imagen debe pesar menos de 10 MB")
+          break
+        end
+      end
+    end
+  end
+
+  def gallery_maximum_count
+    return unless gallery.attached?
+    
+    total_images = gallery.count
+    if total_images > 5
+      errors.add(:gallery, "solo se permiten máximo 5 imágenes en la galería. Has seleccionado #{total_images} imagen(es)")
     end
   end
 
