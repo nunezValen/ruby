@@ -40,6 +40,7 @@ class Product < ApplicationRecord
   validate :image_format_and_size
   validate :at_least_one_genre
   validate :retired_cannot_be_reverted, on: :update
+  validate :unique_new_name_and_author, if: :state_new_item?
 
   # ---------------------------
   # Callbacks
@@ -170,6 +171,19 @@ class Product < ApplicationRecord
   def stock_immutable_for_used_and_retired
     if (retired? || state_used_item?) && will_save_change_to_stock?
       errors.add(:stock, "no puede modificarse para productos usados o dados de baja")
+    end
+  end
+
+  # Unicidad de productos NUEVOS por nombre + autor (case-insensitive)
+  def unique_new_name_and_author
+    return if name.blank? || author.blank?
+
+    scope = Product.where(state: :new_item)
+                   .where("LOWER(name) = ? AND LOWER(author) = ?", name.downcase, author.downcase)
+    scope = scope.where.not(id: id) if persisted?
+
+    if scope.exists?
+      errors.add(:base, "Ya existe un producto NUEVO con el mismo nombre y autor")
     end
   end
 end
