@@ -1,4 +1,4 @@
-class Backstore::GenresController < ApplicationController
+class Backstore::GenresController < Backstore::BaseController
   before_action :set_genre, only: %i[ show edit update destroy ]
 
   # GET /genres or /genres.json
