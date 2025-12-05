@@ -39,11 +39,16 @@
             <td class="text-end">
               <div class="d-inline-flex gap-2">
                 <%= link_to "Ver", [:backstore, product], class: "btn btn-outline-dark btn-sm" %>
-                <%= link_to "Editar", edit_backstore_product_path(product), class: "btn btn-outline-dark btn-sm" %>
+                <% unless product.retired? %>
+                  <%= link_to "Editar", edit_backstore_product_path(product), class: "btn btn-outline-dark btn-sm" %>
+                <% end %>
               </div>
-              <%= form_with url: update_stock_backstore_product_path(product), method: :patch, class: "d-inline-flex align-items-center gap-2 ms-3", local: true do |f| %>
-                <%= f.number_field :amount, value: 0, class: "form-control form-control-sm", style: "width: 80px;", required: true %>
-                <%= f.submit "Stock", class: "btn btn-primary btn-sm" %>
+
+              <% if product.state_new_item? && !product.retired? %>
+                <%= form_with url: update_stock_backstore_product_path(product), method: :patch, class: "d-inline-flex align-items-center gap-2 ms-3", local: true do |f| %>
+                  <%= f.number_field :amount, value: 0, class: "form-control form-control-sm", style: "width: 80px;", required: true %>
+                  <%= f.submit "Stock", class: "btn btn-primary btn-sm" %>
+                <% end %>
               <% end %>
             </td>
           </tr>

@@ -72,6 +72,11 @@ class Product < ApplicationRecord
   end
 
   def change_stock!(amount)
+    if retired? || state_used_item?
+      errors.add(:stock, "no puede modificarse para productos usados o dados de baja")
+      raise ActiveRecord::RecordInvalid, self
+    end
+
     update!(stock: [stock + amount, 0].max)
   end
 
@@ -159,5 +164,12 @@ class Product < ApplicationRecord
   # Fecha de ingreso automática en la creación
   def set_received_on_default
     self.received_on ||= Date.today
+  end
+
+  # El stock no se puede cambiar en usados ni dados de baja
+  def stock_immutable_for_used_and_retired
+    if (retired? || state_used_item?) && will_save_change_to_stock?
+      errors.add(:stock, "no puede modificarse para productos usados o dados de baja")
+    end
   end
 end

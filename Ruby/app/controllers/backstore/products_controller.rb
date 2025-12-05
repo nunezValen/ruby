@@ -1,5 +1,6 @@
 class Backstore::ProductsController < Backstore::BaseController
   before_action :set_product, only: %i[ show edit update destroy soft_delete update_stock ]
+  before_action :reject_retired_for_edit, only: %i[ edit update ]
 
   # GET /products or /products.json
   def index
@@ -65,10 +66,15 @@ class Backstore::ProductsController < Backstore::BaseController
   end
 
   def update_stock
-    @product.change_stock!(params[:amount].to_i)
+    begin
+      @product.change_stock!(params[:amount].to_i)
+      flash[:notice] = "Stock actualizado"
+    rescue ActiveRecord::RecordInvalid
+      flash[:alert] = @product.errors.full_messages.to_sentence
+    end
 
     respond_to do |format|
-      format.html { redirect_to backstore_products_path, notice: "Stock actualizado" }
+      format.html { redirect_to backstore_products_path }
     end
   end
   
@@ -77,6 +83,12 @@ class Backstore::ProductsController < Backstore::BaseController
     # Use callbacks to share common setup or constraints between actions.
     def set_product
       @product = Product.find(params[:id])
+    end
+
+    def reject_retired_for_edit
+      if @product.retired?
+        redirect_to backstore_products_path, alert: "No se pueden editar productos dados de baja"
+      end
     end
 
     # Only allow a list of trusted parameters through.

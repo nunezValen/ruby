@@ -31,11 +31,25 @@
       <%= form.number_field :unit_price, class: "form-control", step: 0.01, min: 0.01, max: 999999.99, required: true %>
     </div>
 
-    <div class="col-md-4">
-      <%= form.label :stock, "Stock disponible", class: "form-label" %>
-      <%= form.number_field :stock, class: "form-control", min: 0, max: 999999, data: { product_state_target: "stockField" } %>
-      <p class="small text-muted mb-0 mt-1">Los productos usados tienen stock fijo de 1 unidad</p>
-    </div>
+    <% if product.persisted? && (product.retired? || product.state_used_item?) %>
+      <div class="col-md-4">
+        <%= form.label :stock, "Stock disponible", class: "form-label" %>
+        <p class="form-control-plaintext"><%= product.stock %></p>
+        <p class="small text-muted mb-0 mt-1">
+          <% if product.retired? %>
+            No se puede modificar el stock de productos dados de baja.
+          <% else %>
+            Los productos usados tienen stock fijo de 1 unidad y no se puede editar.
+          <% end %>
+        </p>
+      </div>
+    <% else %>
+      <div class="col-md-4">
+        <%= form.label :stock, "Stock disponible", class: "form-label" %>
+        <%= form.number_field :stock, class: "form-control", min: 0, max: 999999, data: { product_state_target: "stockField" } %>
+        <p class="small text-muted mb-0 mt-1">Los productos usados tienen stock fijo de 1 unidad</p>
+      </div>
+    <% end %>
 
     <div class="col-md-4">
       <%= form.label :media_type, "Tipo", class: "form-label" %>
