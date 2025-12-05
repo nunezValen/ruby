@@ -91,24 +91,37 @@ class Backstore::ProductsController < Backstore::BaseController
       end
     end
 
-    # Only allow a list of trusted parameters through.
-    # Create: permite definir estado
+    # CREATE: permite elegir estado
     def product_create_params
-      params.require(:product).permit(
+      base = params.require(:product).permit(
         :name, :description, :author, :unit_price, :stock,
-        :media_type, :state,
-        :image, :audio_preview,
+        :media_type, :state, :received_on,
+        :cover_image, :audio_preview,
+        gallery: [],
         genre_ids: []
       )
+
+      clean_gallery(base)
     end
 
-    # Update: NO permite cambiar el estado (nuevo/usado)
+    # UPDATE: NO permite cambiar :state
     def product_update_params
-      params.require(:product).permit(
+      base = params.require(:product).permit(
         :name, :description, :author, :unit_price, :stock,
-        :media_type,
-        :image, :audio_preview,
+        :media_type, :received_on,
+        :cover_image, :audio_preview,
+        gallery: [],
         genre_ids: []
       )
+
+      clean_gallery(base)
+    end
+
+    # elimina entradas vacías de gallery
+    def clean_gallery(permitted)
+      if permitted[:gallery].present?
+        permitted[:gallery] = permitted[:gallery].reject(&:blank?)
+      end
+      permitted
     end
 end
