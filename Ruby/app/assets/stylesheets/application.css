@@ -60,6 +60,7 @@ a:hover {
 
 .navbar .nav-link {
   color: rgba(255, 255, 255, 0.85);
+  font-weight: 700;
 }
 
 .navbar .nav-link.active,
