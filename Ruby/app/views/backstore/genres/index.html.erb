@@ -1,16 +1,40 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Géneros" %>
 
-<h1>Géneros</h1>
-
-<div id="genres">
-  <% @genres.each do |genre| %>
-    <%= render genre %>
-    <p>
-      <%= link_to "Ver este género", [:backstore, genre] %>
-    </p>
-  <% end %>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Géneros</h1>
+  <%= link_to "Nuevo género", new_backstore_genre_path, class: "btn btn-primary" %>
 </div>
 
-<%= link_to "Nuevo género", new_backstore_genre_path %>
+<% if @genres.any? %>
+  <div class="table-responsive card shadow-sm">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @genres.each do |genre| %>
+          <tr>
+            <td>
+              <strong><%= genre.name %></strong>
+            </td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-2">
+                <%= button_to "Eliminar", [:backstore, genre],
+                              method: :delete,
+                              class: "btn btn-outline-dark btn-sm",
+                              data: { confirm: "¿Estás seguro de que quieres eliminar este género?" } %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="card shadow-sm p-4 text-center">
+    <p class="mb-0">No hay géneros registrados.</p>
+  </div>
+<% end %>

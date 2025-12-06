@@ -1,9 +1,8 @@
-<%= form_with(model: [:backstore, genre]) do |form| %>
+<%= form_with(model: [:backstore, genre], class: "card shadow-sm p-4 border-0") do |form| %>
   <% if genre.errors.any? %>
-    <div style="color: red">
-      <h2><%= genre.errors.count %> error(es) impidieron que se guarde este género:</h2>
-
-      <ul>
+    <div class="alert alert-dark">
+      <h2 class="h5 mb-3"><%= genre.errors.count %> error(es) impidieron que se guarde este género:</h2>
+      <ul class="mb-0">
         <% genre.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,12 +10,15 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, "Nombre", style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :name, "Nombre", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mt-4 d-flex justify-content-end gap-3">
+    <%= link_to "Cancelar", backstore_genres_path, class: "btn btn-outline-dark" %>
+    <%= form.submit(genre.new_record? ? "Crear género" : "Actualizar género", class: "btn btn-primary px-4") %>
   </div>
 <% end %>

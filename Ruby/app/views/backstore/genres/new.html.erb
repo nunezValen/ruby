@@ -1,11 +1,8 @@
 <% content_for :title, "Nuevo género" %>
 
-<h1>Nuevo género</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Nuevo género</h1>
+  <%= link_to "Volver", backstore_genres_path, class: "btn btn-outline-dark" %>
+</div>
 
 <%= render "form", genre: @genre %>
-
-<br>
-
-<div>
-  <%= link_to "Volver a géneros", backstore_genres_path %>
-</div>

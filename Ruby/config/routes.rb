@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :genres
+    resources :genres, only: [:index, :new, :create, :destroy]
     resources :users
   end
 end

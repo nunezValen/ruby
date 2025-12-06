@@ -50,7 +50,7 @@
         <%# Si tengo permiso para destruir el usuario Y si no soy el usuario que estoy viendo %>
         <% if can?(:destroy, @user) && @user.id != current_user.id %>
           <%= button_to "Eliminar usuario", backstore_user_path(@user), method: :delete, 
-                        class: "btn btn-danger",
+                        class: "btn btn-outline-dark",
                         data: { confirm: "¿Estás seguro de que quieres eliminar este usuario?" } %>
         <% end %>
       </div>

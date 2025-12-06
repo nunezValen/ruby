@@ -32,7 +32,7 @@
               <% if can?(:destroy, user) && user.id != current_user.id %>
                 <div class="d-inline-flex gap-2 ms-3">
                   <%= button_to "Eliminar", backstore_user_path(user), method: :delete, 
-                                class: "btn btn-danger btn-sm",
+                                class: "btn btn-outline-dark btn-sm",
                                 data: { confirm: "¿Estás seguro de que quieres eliminar este usuario?" } %>
                 </div>
               <% end %>
