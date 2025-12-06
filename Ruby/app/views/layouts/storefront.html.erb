@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title><%= content_for(:title) || "DiscoStore" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <style>
+      .storefront-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: white;
+      }
+      .product-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      }
+      .filter-sidebar {
+        position: sticky;
+        top: 20px;
+      }
+      .badge-vinyl { background-color: #6c5ce7; }
+      .badge-cd { background-color: #00b894; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark storefront-hero shadow">
+      <div class="container py-2">
+        <%= link_to root_path, class: "navbar-brand" do %>
+          <span style="font-size: 1.4rem;">🎵 DiscoStore</span>
+        <% end %>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navStorefront">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navStorefront">
+          <ul class="navbar-nav me-auto gap-2">
+            <li class="nav-item">
+              <%= link_to "Todos", storefront_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Vinilos", storefront_path(media_type: "vinyl"), class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "CDs", storefront_path(media_type: "cd"), class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Nuevos", storefront_path(state: "new_item"), class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Usados", storefront_path(state: "used_item"), class: "nav-link" %>
+            </li>
+          </ul>
+
+          <div class="d-flex gap-2">
+            <% if user_signed_in? %>
+              <%= link_to "Admin", backstore_products_path, class: "btn btn-outline-light btn-sm" %>
+              <%= button_to "Salir", destroy_user_session_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
+            <% else %>
+              <%= link_to "Empleados", new_user_session_path, class: "btn btn-outline-light btn-sm" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <%= render "shared/flash" %>
+      <%= yield %>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <p class="mb-1">🎵 DiscoStore - Tu tienda de vinilos y CDs</p>
+        <small class="text-muted">© 2025 - Visítanos en nuestra tienda física</small>
+      </div>
+    </footer>
+  </body>
+</html>
