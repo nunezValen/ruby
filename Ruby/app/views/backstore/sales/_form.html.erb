@@ -10,6 +10,26 @@
     </div>
   <% end %>
 
+  <div class="card mb-4 p-3 bg-light">
+    <h3 class="h5 mb-3">Información del Cliente</h3>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= form.label :client_name, "Nombre del Cliente", class: "form-label" %>
+        <%= form.text_field :client_name, class: "form-control", placeholder: "Nombre completo del cliente", required: true %>
+        <% if sale.errors[:client_name].any? %>
+          <div class="text-danger small mt-1"><%= sale.errors[:client_name].first %></div>
+        <% end %>
+      </div>
+      <div class="col-md-6">
+        <%= form.label :client_email, "Email del Cliente", class: "form-label" %>
+        <%= form.email_field :client_email, class: "form-control", placeholder: "email@ejemplo.com", required: true %>
+        <% if sale.errors[:client_email].any? %>
+          <div class="text-danger small mt-1"><%= sale.errors[:client_email].first %></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
   <h3 class="h5 mb-3">Productos</h3>
   
   <div data-sale-form-target="items">

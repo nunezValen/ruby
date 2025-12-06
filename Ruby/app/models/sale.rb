@@ -11,6 +11,8 @@ class Sale < ApplicationRecord
   # ---------------------------
   validates :employee_email, :employee_name, presence: true
   validates :employee_email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :client_name, :client_email, presence: true
+  validates :client_email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validate :at_least_one_sale_item
   validate :cancelled_cannot_be_reverted, on: :update
 

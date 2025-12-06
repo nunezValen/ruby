@@ -151,6 +151,7 @@ class Backstore::SalesController < Backstore::BaseController
     # Only allow a list of trusted parameters through.
     def sale_params
       params.require(:sale).permit(
+        :client_name, :client_email,
         sale_items_attributes: [:id, :product_id, :quantity, :unit_price, :_destroy]
       )
     end

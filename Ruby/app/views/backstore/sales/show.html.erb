@@ -17,6 +17,22 @@
 <div class="row g-4">
   <div class="col-lg-8">
     <div class="card shadow-sm p-4">
+      <h2 class="h5 mb-4">Información del Cliente</h2>
+      <table class="table mb-0">
+        <tbody>
+          <tr>
+            <th scope="row" style="width: 200px;">Nombre</th>
+            <td><%= @sale.client_name %></td>
+          </tr>
+          <tr>
+            <th scope="row">Email</th>
+            <td><%= @sale.client_email %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card shadow-sm p-4 mt-4">
       <h2 class="h5 mb-4">Información del empleado</h2>
       <table class="table mb-0">
         <tbody>
