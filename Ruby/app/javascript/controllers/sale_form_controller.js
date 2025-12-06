@@ -41,6 +41,13 @@ export default class extends Controller {
     // Agregar el nuevo item
     this.itemsTarget.appendChild(newItem)
     
+    // Forzar la inicialización de Stimulus en el nuevo elemento
+    // Esto asegura que los controladores se inicialicen correctamente
+    const application = this.application || window.Stimulus
+    if (application) {
+      application.load(newItem)
+    }
+    
     // Actualizar eventos
     this.updateItemEvents(newItem)
   }

@@ -107,9 +107,37 @@ export default class extends Controller {
     }
     
     // Mostrar el producto seleccionado
-    const selectedBadge = this.selectedTarget.querySelector(".badge")
-    selectedBadge.textContent = `${product.name} - Stock: ${product.stock} - $${product.unit_price.toFixed(2)}`
-    this.selectedTarget.style.display = "block"
+    // Buscar el div selected-product que está después del container en el mismo nivel
+    const containerParent = this.containerTarget.parentElement
+    const selectedDiv = containerParent.querySelector(".selected-product") || this.selectedTarget
+    
+    if (selectedDiv) {
+      selectedDiv.innerHTML = `
+        <div class="d-flex align-items-center gap-2">
+          <span class="genre-pill">${product.name} - Stock: ${product.stock} - $${product.unit_price.toFixed(2)}</span>
+          <button type="button" 
+                  class="btn btn-sm btn-outline-secondary" 
+                  data-action="click->product-search#changeProduct">
+            Cambiar
+          </button>
+        </div>
+      `
+      selectedDiv.style.display = "block"
+      
+      // Reconectar el evento del botón después de cambiar el innerHTML
+      const changeButton = selectedDiv.querySelector("button[data-action*='changeProduct']")
+      if (changeButton) {
+        // Remover listeners anteriores si existen
+        const newButton = changeButton.cloneNode(true)
+        changeButton.parentNode.replaceChild(newButton, changeButton)
+        // Agregar el listener
+        newButton.addEventListener("click", (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          this.changeProduct(e)
+        })
+      }
+    }
     
     // Limpiar el input de búsqueda
     this.searchInputTarget.value = ""
@@ -131,12 +159,20 @@ export default class extends Controller {
 
   changeProduct(event) {
     event.preventDefault()
+    event.stopPropagation()
+    
     // Mostrar la barra de búsqueda y ocultar el producto seleccionado
     const searchContainer = this.containerTarget.querySelector(".search-container")
     if (searchContainer) {
       searchContainer.style.display = "block"
     }
-    this.selectedTarget.style.display = "none"
+    
+    // Ocultar el badge - buscar por target o por clase
+    const containerParent = this.containerTarget.parentElement
+    const selectedDiv = containerParent.querySelector(".selected-product") || this.selectedTarget
+    if (selectedDiv) {
+      selectedDiv.style.display = "none"
+    }
     
     // Limpiar el producto seleccionado
     this.productIdTarget.value = ""
@@ -149,13 +185,33 @@ export default class extends Controller {
       if (priceInput) {
         priceInput.value = ""
       }
+      
+      // Limpiar el subtotal
+      const subtotalDisplay = item.querySelector("[data-sale-form-target='subtotalDisplay']")
+      if (subtotalDisplay) {
+        subtotalDisplay.value = "0.00"
+      }
     }
     
     // Limpiar el input de búsqueda
     this.searchInputTarget.value = ""
     
+    // Ocultar resultados si están visibles
+    this.hideResults()
+    
     // Enfocar el input de búsqueda
     this.searchInputTarget.focus()
+    
+    // Actualizar el total si hay un controlador sale-form
+    if (item) {
+      const saleFormController = this.application?.getControllerForElementAndIdentifier(
+        item.closest("[data-controller*='sale-form']"),
+        "sale-form"
+      )
+      if (saleFormController && saleFormController.updateTotal) {
+        saleFormController.updateTotal()
+      }
+    }
   }
 
   showResults() {

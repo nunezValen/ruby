@@ -46,7 +46,7 @@
               <div class="selected-product mt-2" data-product-search-target="selected" style="<%= item_form.object.product_id.present? ? '' : 'display: none;' %>">
                 <% if item_form.object.product_id.present? && item_form.object.product %>
                   <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-primary">
+                    <span class="genre-pill">
                       <%= item_form.object.product.name %> - Stock: <%= item_form.object.product.stock %> - $<%= number_with_precision(item_form.object.product.unit_price, precision: 2) %>
                     </span>
                     <button type="button" 
@@ -57,7 +57,7 @@
                   </div>
                 <% else %>
                   <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-primary"></span>
+                    <span class="genre-pill"></span>
                     <button type="button" 
                             class="btn btn-sm btn-outline-secondary" 
                             data-action="click->product-search#changeProduct"
@@ -156,7 +156,7 @@
             </div>
             <div class="selected-product mt-2" data-product-search-target="selected" style="display: none;">
               <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-primary"></span>
+                <span class="genre-pill"></span>
                 <button type="button" 
                         class="btn btn-sm btn-outline-secondary" 
                         data-action="click->product-search#changeProduct">
