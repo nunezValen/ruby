@@ -62,6 +62,10 @@ class Product < ApplicationRecord
   # ---------------------------
   # Métodos de dominio
   # ---------------------------
+  def name_with_stock
+    "#{name} - Stock: #{stock} - $#{unit_price}"
+  end
+
   def soft_delete!
     return if retired?
 

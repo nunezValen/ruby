@@ -1,0 +1,209 @@
+<%= form_with(model: [:backstore, sale], class: "card shadow-sm p-4 border-0", data: { controller: "sale-form" }) do |form| %>
+  <% if sale.errors.any? %>
+    <div class="alert alert-dark">
+      <h2 class="h5 mb-3"><%= sale.errors.count %> error(es) impiden guardar la venta:</h2>
+      <ul class="mb-0">
+        <% sale.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h3 class="h5 mb-3">Productos</h3>
+  
+  <div data-sale-form-target="items">
+    <%= form.fields_for :sale_items do |item_form| %>
+      <% next if item_form.object.product_id.blank? && !item_form.object.persisted? %>
+      <div class="card mb-3 sale-item-row" data-sale-form-target="item">
+        <div class="card-body">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+              <%= item_form.label :product_id, "Producto", class: "form-label" %>
+              <div data-controller="product-search" data-product-search-target="container">
+                <%= item_form.hidden_field :product_id, 
+                      class: "product-id-input",
+                      value: item_form.object.product_id,
+                      data: { 
+                        product_search_target: "productId",
+                        sale_form_target: "productIdHidden",
+                        action: "change->sale-form#updatePriceFromHidden"
+                      } %>
+                <div class="search-container" style="<%= item_form.object.product_id.present? ? 'display: none;' : '' %>">
+                  <input type="text" 
+                         class="form-control product-search-input" 
+                         placeholder="Buscar producto por nombre..."
+                         value="<%= item_form.object.product&.name %>"
+                         data-action="input->product-search#search focus->product-search#showResults"
+                         data-product-search-target="searchInput">
+                  <div class="dropdown-menu w-100 mt-1" 
+                       data-product-search-target="results"
+                       style="display: none; max-height: 300px; overflow-y: auto;">
+                    <!-- Los resultados se cargarán aquí -->
+                  </div>
+                </div>
+              </div>
+              <div class="selected-product mt-2" data-product-search-target="selected" style="<%= item_form.object.product_id.present? ? '' : 'display: none;' %>">
+                <% if item_form.object.product_id.present? && item_form.object.product %>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary">
+                      <%= item_form.object.product.name %> - Stock: <%= item_form.object.product.stock %> - $<%= number_with_precision(item_form.object.product.unit_price, precision: 2) %>
+                    </span>
+                    <button type="button" 
+                            class="btn btn-sm btn-outline-secondary" 
+                            data-action="click->product-search#changeProduct">
+                      Cambiar
+                    </button>
+                  </div>
+                <% else %>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary"></span>
+                    <button type="button" 
+                            class="btn btn-sm btn-outline-secondary" 
+                            data-action="click->product-search#changeProduct"
+                            style="display: none;">
+                      Cambiar
+                    </button>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <%= item_form.label :quantity, "Cantidad", class: "form-label" %>
+              <%= item_form.number_field :quantity, 
+                    class: "form-control quantity-input", 
+                    min: 1, 
+                    required: true,
+                    data: { 
+                      action: "change->sale-form#updateSubtotal",
+                      sale_form_target: "quantityInput"
+                    } %>
+            </div>
+            <div class="col-md-2">
+              <%= item_form.label :unit_price, "Precio unitario", class: "form-label" %>
+              <%= item_form.number_field :unit_price, 
+                    class: "form-control unit-price-input", 
+                    step: 0.01, 
+                    min: 0.01,
+                    readonly: true,
+                    data: { sale_form_target: "unitPriceInput" } %>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Subtotal</label>
+              <input type="text" 
+                     class="form-control subtotal-display" 
+                     readonly 
+                     data-sale-form-target="subtotalDisplay"
+                     value="<%= number_with_precision(item_form.object.subtotal || 0, precision: 2) %>">
+            </div>
+          </div>
+          <%= item_form.hidden_field :_destroy, value: false, data: { sale_form_target: "destroyInput" } %>
+          <button type="button" 
+                  class="btn btn-sm btn-outline-danger mt-2" 
+                  data-action="click->sale-form#removeItem">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <button type="button" 
+            class="btn btn-outline-primary" 
+            data-action="click->sale-form#addItem">
+      + Agregar producto
+    </button>
+  </div>
+
+  <div class="card bg-light p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <strong class="h5 mb-0">Total:</strong>
+      <strong class="h5 mb-0" data-sale-form-target="totalDisplay">$ 0.00</strong>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex justify-content-end gap-3">
+    <%= link_to "Cancelar", backstore_sales_path, class: "btn btn-outline-dark" %>
+    <%= form.submit "Realizar venta", class: "btn btn-primary px-4" %>
+  </div>
+
+  <template data-sale-form-target="itemTemplate">
+    <div class="card mb-3 sale-item-row" data-sale-form-target="item">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+            <label class="form-label">Producto</label>
+            <div data-controller="product-search" data-product-search-target="container">
+              <input type="hidden" 
+                     name="sale[sale_items_attributes][INDEX][product_id]" 
+                     class="product-id-input"
+                     data-product-search-target="productId"
+                     data-sale-form-target="productIdHidden"
+                     data-action="change->sale-form#updatePriceFromHidden">
+              <div class="search-container">
+                <input type="text" 
+                       class="form-control product-search-input" 
+                       placeholder="Buscar producto por nombre..."
+                       data-action="input->product-search#search focus->product-search#showResults"
+                       data-product-search-target="searchInput">
+                <div class="dropdown-menu w-100 mt-1" 
+                     data-product-search-target="results"
+                     style="display: none; max-height: 300px; overflow-y: auto;">
+                  <!-- Los resultados se cargarán aquí -->
+                </div>
+              </div>
+            </div>
+            <div class="selected-product mt-2" data-product-search-target="selected" style="display: none;">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary"></span>
+                <button type="button" 
+                        class="btn btn-sm btn-outline-secondary" 
+                        data-action="click->product-search#changeProduct">
+                  Cambiar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Cantidad</label>
+            <input type="number" 
+                   name="sale[sale_items_attributes][INDEX][quantity]" 
+                   class="form-control quantity-input" 
+                   min="1" 
+                   required
+                   data-action="change->sale-form#updateSubtotal"
+                   data-sale-form-target="quantityInput">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Precio unitario</label>
+            <input type="number" 
+                   name="sale[sale_items_attributes][INDEX][unit_price]" 
+                   class="form-control unit-price-input" 
+                   step="0.01" 
+                   min="0.01"
+                   readonly
+                   data-sale-form-target="unitPriceInput">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Subtotal</label>
+            <input type="text" 
+                   class="form-control subtotal-display" 
+                   readonly 
+                   data-sale-form-target="subtotalDisplay"
+                   value="0.00">
+          </div>
+        </div>
+        <input type="hidden" 
+               name="sale[sale_items_attributes][INDEX][_destroy]" 
+               value="false" 
+               data-sale-form-target="destroyInput">
+        <button type="button" 
+                class="btn btn-sm btn-outline-danger mt-2" 
+                data-action="click->sale-form#removeItem">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </template>
+<% end %>
