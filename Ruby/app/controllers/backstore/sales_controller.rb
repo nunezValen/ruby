@@ -117,16 +117,18 @@ class Backstore::SalesController < Backstore::BaseController
     query = params[:q].to_s.strip
     products = Product.active.where.not(retired: true)
     
+    # Si el query está vacío, devolver todos los productos
+    if query.blank?
+      products = products.order(:name).limit(100)
     # Si el query es solo un número, buscar por ID
-    if query.match?(/^\d+$/)
-      products = products.where(id: query)
-    elsif query.present?
-      products = products.where("name LIKE ? OR author LIKE ?", "%#{query}%", "%#{query}%")
+    elsif query.match?(/^\d+$/)
+      products = products.where(id: query).order(:name).limit(10)
+    # Si hay texto, filtrar por nombre o autor
     else
-      products = products.none
+      products = products.where("name LIKE ? OR author LIKE ?", "%#{query}%", "%#{query}%")
+                      .order(:name)
+                      .limit(100)
     end
-    
-    products = products.order(:name).limit(10)
     
     render json: products.map { |p| 
       { 

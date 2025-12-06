@@ -25,14 +25,11 @@ export default class extends Controller {
     clearTimeout(this.searchTimeout)
     const query = event.target.value.trim()
     
-    if (query.length < 2) {
-      this.hideResults()
-      return
-    }
-
+    // Si el query está vacío, mostrar todos los productos
+    // Si tiene contenido, filtrar con un pequeño delay
     this.searchTimeout = setTimeout(() => {
       this.performSearch(query)
-    }, 300)
+    }, query.length > 0 ? 300 : 0)
   }
 
   async performSearch(query) {
@@ -53,13 +50,23 @@ export default class extends Controller {
     }
   }
 
+  showResults() {
+    // Cuando se muestra el dropdown, si está vacío, cargar todos los productos
+    const query = this.searchInputTarget.value.trim()
+    if (query.length === 0 && this.resultsTarget.innerHTML.trim() === "") {
+      this.performSearch("")
+    } else {
+      this.resultsTarget.style.display = "block"
+    }
+  }
+
   displayResults(products) {
     const resultsContainer = this.resultsTarget
     resultsContainer.innerHTML = ""
     
     if (products.length === 0) {
       resultsContainer.innerHTML = '<div class="dropdown-item-text text-muted">No se encontraron productos</div>'
-      this.showResults()
+      this.resultsTarget.style.display = "block"
       return
     }
 
@@ -81,7 +88,7 @@ export default class extends Controller {
       resultsContainer.appendChild(item)
     })
     
-    this.showResults()
+    this.resultsTarget.style.display = "block"
   }
 
   selectProduct(event, product) {
@@ -212,10 +219,6 @@ export default class extends Controller {
         saleFormController.updateTotal()
       }
     }
-  }
-
-  showResults() {
-    this.resultsTarget.style.display = "block"
   }
 
   hideResults() {
