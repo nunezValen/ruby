@@ -1,9 +1,11 @@
 class Backstore::SalesController < Backstore::BaseController
-  before_action :set_sale, only: %i[ show ]
+  before_action :set_sale, only: %i[ show cancel ]
 
   # GET /sales or /sales.json
   def index
-    @sales = Sale.order(created_at: :desc)
+    @filter = params[:filter] == "cancelled" ? "cancelled" : "active"
+    scope = @filter == "cancelled" ? Sale.cancelled : Sale.active
+    @sales = scope.order(created_at: :desc)
   end
 
   # GET /sales/new
@@ -85,6 +87,17 @@ class Backstore::SalesController < Backstore::BaseController
 
   # GET /sales/1 or /sales/1.json
   def show
+  end
+
+  # PATCH /sales/1/cancel
+  def cancel
+    if @sale.cancelled?
+      redirect_to [:backstore, @sale], alert: "La venta ya está cancelada."
+      return
+    end
+
+    @sale.cancel!
+    redirect_to [:backstore, @sale], notice: "Venta cancelada correctamente. El stock ha sido devuelto a los productos."
   end
 
   # GET /sales/search_products

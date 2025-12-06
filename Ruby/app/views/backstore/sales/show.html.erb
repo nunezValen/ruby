@@ -21,6 +21,22 @@
             <th scope="row">Fecha de venta</th>
             <td><%= l(@sale.created_at, format: :long) %></td>
           </tr>
+          <tr>
+            <th scope="row">Estado</th>
+            <td>
+              <% if @sale.cancelled_at? %>
+                <span class="genre-pill">Cancelada <%= @sale.cancelled_at&.strftime("%d/%m/%Y") %></span>
+              <% else %>
+                <span class="genre-pill">Activa</span>
+              <% end %>
+            </td>
+          </tr>
+          <% if @sale.cancelled_at? %>
+            <tr>
+              <th scope="row">Fecha de cancelación</th>
+              <td><%= l(@sale.cancelled_at, format: :long) %></td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>
@@ -77,6 +93,23 @@
         </tbody>
       </table>
     </div>
+
+    <% unless @sale.cancelled? %>
+      <div class="card shadow-sm p-4 mt-4">
+        <div class="d-flex gap-2">
+          <%= button_to "Cancelar venta",
+                        cancel_backstore_sale_path(@sale),
+                        method: :patch,
+                        class: "btn btn-primary w-100",
+                        form: { data: { action: "submit->confirm-modal#open",
+                                        confirm_message: "¿Cancelar esta venta? El stock será devuelto a los productos." } } %>
+        </div>
+      </div>
+    <% else %>
+      <div class="card shadow-sm p-4 mt-4">
+        <span class="badge bg-secondary">Venta cancelada</span>
+      </div>
+    <% end %>
   </div>
 </div>
 

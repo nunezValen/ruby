@@ -3,6 +3,13 @@
   <%= link_to "Nueva venta", new_backstore_sale_path, class: "btn btn-primary" %>
 </div>
 
+<div class="filter-links mb-3 d-flex gap-3">
+  <%= link_to "Activas", backstore_sales_path(filter: :active),
+              class: "btn btn-outline-dark#{@filter == 'active' ? ' active' : ''}" %>
+  <%= link_to "Canceladas", backstore_sales_path(filter: :cancelled),
+              class: "btn btn-outline-dark#{@filter == 'cancelled' ? ' active' : ''}" %>
+</div>
+
 <% if @sales.any? %>
   <div class="table-responsive card shadow-sm">
     <table class="table mb-0">
@@ -12,6 +19,7 @@
           <th>Empleado</th>
           <th>Email</th>
           <th>Productos</th>
+          <th>Estado</th>
           <th class="text-end">Total</th>
           <th class="text-end">Acciones</th>
         </tr>
@@ -24,6 +32,13 @@
             <td><%= sale.employee_email %></td>
             <td>
               <span class="badge bg-secondary"><%= sale.total_items %> producto(s)</span>
+            </td>
+            <td>
+              <% if sale.cancelled_at? %>
+                <span class="genre-pill">Cancelada <%= sale.cancelled_at&.strftime("%d/%m/%Y") %></span>
+              <% else %>
+                <span class="genre-pill">Activa</span>
+              <% end %>
             </td>
             <td class="text-end">
               <strong>$ <%= number_with_precision(sale.total_amount, precision: 2) %></strong>
@@ -38,7 +53,7 @@
   </div>
 <% else %>
   <div class="card shadow-sm p-4 text-center">
-    <p class="mb-0">No hay ventas registradas.</p>
+    <p class="mb-0">No hay ventas en este filtro.</p>
   </div>
 <% end %>
 

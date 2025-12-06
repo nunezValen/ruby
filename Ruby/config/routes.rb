@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     resources :genres, only: [:index, :new, :create, :destroy]
     resources :users
     resources :sales, only: [:index, :new, :create, :show] do
+      member do
+        patch :cancel
+      end
       collection do
         get :search_products
       end
