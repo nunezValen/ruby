@@ -85,10 +85,22 @@ class Backstore::SalesController < Backstore::BaseController
     end
   end
 
-  # GET /sales/1 or /sales/1.json
+  # GET /sales/1 or /sales/1.json or /sales/1.pdf
   def show
+    respond_to do |format|
+      format.html
+      format.json
+      format.pdf do
+        render pdf: "venta_#{@sale.id}",
+               template: "backstore/sales/show",
+               layout: "pdf",
+               page_size: "A4",
+               margin: { top: 20, bottom: 20, left: 20, right: 20 },
+               show_as_html: params[:debug].present?
+      end
+      
+    end
   end
-
   # PATCH /sales/1/cancel
   def cancel
     if @sale.cancelled?

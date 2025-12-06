@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Factura de Venta #<%= @sale&.id || '' %></title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      font-size: 12px; 
+      margin: 0;
+      padding: 0;
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 20px; 
+    }
+    th, td { 
+      border: 1px solid #333; 
+      padding: 6px; 
+    }
+  </style>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>
