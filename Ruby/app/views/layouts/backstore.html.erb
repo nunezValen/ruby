@@ -12,7 +12,9 @@
   <body class="app-body">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
       <div class="container py-2">
-        <%= link_to "DiscoStore", backstore_products_path, class: "navbar-brand" %>
+        <%= link_to backstore_products_path, class: "navbar-brand d-flex align-items-center" do %>
+          <%= image_tag "Logo.png", alt: "DiscoStore", class: "navbar-logo" %>
+        <% end %>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#backstoreNav">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -49,5 +51,12 @@
       <%= render "shared/flash" %>
       <%= yield %>
     </main>
+
+    <footer class="app-footer mt-5">
+      <div class="container text-center small">
+        Tecnologías de Producción de Software - Ruby | Desarrollado por
+        Valentín Nuñez, Uziel Juárez Piñeiro y Zoe Eguaras
+      </div>
+    </footer>
   </body>
 </html>

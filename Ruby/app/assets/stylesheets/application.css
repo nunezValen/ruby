@@ -46,16 +46,23 @@ a:hover {
   background-color: var(--brand-white);
 }
 
-.navbar {
-  border-bottom: 2px solid var(--brand-black);
-}
-
 .navbar.bg-primary {
   background-color: var(--brand-red) !important;
 }
 
 .navbar-brand {
   letter-spacing: 0.05em;
+}
+
+.navbar-logo {
+  height: 100px;
+  width: auto;
+}
+
+@media (max-width: 576px) {
+  .navbar-logo {
+    height: 40px;
+  }
 }
 
 .navbar .nav-link {
@@ -187,4 +194,18 @@ input[type="radio"]:checked {
   opacity: 1;
   padding: 0.15rem;
   margin: 0;
+}
+
+.app-footer {
+  background-image: url("Footer.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: var(--brand-white);
+  padding: 1.5rem 0;
+  border-top: 2px solid var(--brand-black);
+}
+
+.app-footer .container {
+  font-size: 0.9rem;
 }
