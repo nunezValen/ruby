@@ -28,4 +28,26 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  hello: "Hola mundo"
+  activerecord:
+    models:
+      user: "usuario"
+      product: "producto"
+      genre: "género"
+    attributes:
+      user:
+        email: "Email"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+      product:
+        name: "Nombre"
+      genre:
+        name: "Nombre"
+  errors:
+    messages:
+      blank: "no puede estar en blanco"
+      invalid: "no es válido"
+      taken: "ya está en uso"
+      too_short: "es demasiado corto (mínimo %{count} caracteres)"
+      too_long: "es demasiado largo (máximo %{count} caracteres)"
+      confirmation: "no coincide"
