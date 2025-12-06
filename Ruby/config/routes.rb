@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   root to: 'storefront#index'
 
   # Define el root - página de inicio que redirige según autenticación
-  root to: 'backstore/products#index' # Corregir cuando esté el storefront
+  #root to: 'backstore/products#index' # Corregir cuando esté el storefront
 
   # Storefront público (sin autenticación)
   get 'tienda', to: 'storefront#index', as: :storefront

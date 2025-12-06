@@ -1,144 +1,137 @@
-<div class="container py-4">
-  <!-- Breadcrumb -->
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><%= link_to "Inicio", root_path %></li>
-      <li class="breadcrumb-item"><%= link_to "Tienda", storefront_path %></li>
-      <li class="breadcrumb-item active"><%= @product.name %></li>
-    </ol>
-  </nav>
+<!-- Breadcrumb (responsive) -->
+<nav aria-label="breadcrumb" class="mb-3 mb-md-4">
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><%= link_to "Inicio", root_path %></li>
+    <li class="breadcrumb-item d-none d-sm-inline"><%= link_to "Catálogo", storefront_path %></li>
+    <li class="breadcrumb-item active text-truncate" style="max-width: 150px;"><%= @product.name %></li>
+  </ol>
+</nav>
 
-  <div class="row">
-    <!-- COLUMNA IZQUIERDA: Imágenes y audio -->
-    <div class="col-lg-6 mb-4">
-      <!-- Imagen principal -->
-      <div class="card shadow mb-3">
-        <% if @product.cover_image.attached? %>
-          <%= image_tag @product.cover_image.variant(resize_to_limit: [600, 600]), class: "card-img-top", alt: @product.name, id: "imagen-principal" %>
-        <% else %>
-          <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 400px;">
-            <span class="display-1 text-white-50">🎵</span>
-          </div>
-        <% end %>
-      </div>
-
-      <!-- Galería de imágenes adicionales -->
-      <% if @product.gallery.attached? && @product.gallery.any? %>
-        <div class="d-flex flex-wrap gap-2">
-          <% @product.gallery.each do |imagen| %>
-            <%= image_tag imagen.variant(resize_to_fill: [80, 80]), class: "rounded border", style: "width: 80px; height: 80px; object-fit: cover; cursor: pointer;" %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <!-- Audio de muestra (solo para usados) -->
-      <% if @product.state_used_item? && @product.audio_preview.attached? %>
-        <div class="card mt-3">
-          <div class="card-body">
-            <h6 class="card-title">🎧 Escuchar muestra del disco</h6>
-            <p class="card-text small text-muted">Este es un disco usado. Escuchá cómo suena:</p>
-            <audio controls class="w-100">
-              <source src="<%= url_for(@product.audio_preview) %>" type="<%= @product.audio_preview.content_type %>">
-              Tu navegador no soporta reproducción de audio.
-            </audio>
-          </div>
+<div class="row">
+  <!-- COLUMNA IZQUIERDA: Imágenes y audio -->
+  <div class="col-lg-6 mb-3 mb-lg-4">
+    <!-- Imagen principal -->
+    <div class="card shadow-sm mb-3">
+      <% if @product.cover_image.attached? %>
+        <%= image_tag @product.cover_image.variant(resize_to_limit: [600, 600]), class: "card-img-top img-fluid", alt: @product.name %>
+      <% else %>
+        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="aspect-ratio: 1/1; max-height: 400px;">
+          <span class="text-muted">Sin imagen</span>
         </div>
       <% end %>
     </div>
 
-    <!-- COLUMNA DERECHA: Información del producto -->
-    <div class="col-lg-6">
-      <h1 class="mb-2"><%= @product.name %></h1>
-      <h4 class="text-muted mb-3"><%= @product.author %></h4>
-
-      <!-- Badges de tipo y estado -->
+    <!-- Galería de imágenes adicionales -->
+    <% if @product.gallery.attached? && @product.gallery.any? %>
       <div class="d-flex flex-wrap gap-2 mb-3">
-        <span class="badge <%= @product.media_type_vinyl? ? 'badge-vinyl' : 'badge-cd' %> fs-6">
-          <%= @product.media_type_vinyl? ? "🎵 Vinilo" : "💿 CD" %>
-        </span>
-        <span class="badge <%= @product.state_new_item? ? 'bg-success' : 'bg-warning text-dark' %> fs-6">
-          <%= @product.state_new_item? ? "✨ Nuevo" : "♻️ Usado" %>
-        </span>
-      </div>
-
-      <!-- Géneros -->
-      <div class="mb-3">
-        <% @product.genres.each do |genre| %>
-          <%= link_to genre.name, storefront_path(genre_id: genre.id), class: "badge bg-secondary text-decoration-none" %>
+        <% @product.gallery.each do |imagen| %>
+          <%= image_tag imagen.variant(resize_to_fill: [60, 60]), class: "rounded image-preview", style: "width: 60px; height: 60px; object-fit: cover;" %>
         <% end %>
       </div>
+    <% end %>
 
-      <hr>
-
-      <!-- Precio -->
-      <div class="mb-4">
-        <span class="display-5 text-success fw-bold">$<%= number_with_precision(@product.unit_price, precision: 2) %></span>
-      </div>
-
-      <!-- Stock -->
-      <div class="mb-4">
-        <% if @product.stock > 0 %>
-          <div class="alert alert-success py-2">
-            <strong>✓ Disponible</strong> - <%= @product.stock %> unidad<%= @product.stock > 1 ? 'es' : '' %> en stock
-          </div>
-        <% else %>
-          <div class="alert alert-danger py-2">
-            <strong>✗ Sin stock</strong> - Consultanos para más información
-          </div>
-        <% end %>
-      </div>
-
-      <!-- Descripción -->
-      <div class="card bg-light mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Descripción</h5>
-          <p class="card-text"><%= @product.description %></p>
+    <!-- Audio de muestra (solo para usados) -->
+    <% if @product.state_used_item? && @product.audio_preview.attached? %>
+      <div class="card">
+        <div class="card-body p-2 p-sm-3">
+          <h6 class="card-title small">Escuchar muestra del disco</h6>
+          <p class="card-text small text-muted d-none d-sm-block">Este es un disco usado. Podés escuchar cómo suena:</p>
+          <audio controls class="w-100" style="height: 40px;">
+            <source src="<%= url_for(@product.audio_preview) %>" type="<%= @product.audio_preview.content_type %>">
+            Tu navegador no soporta reproducción de audio.
+          </audio>
         </div>
       </div>
-
-      <!-- Info adicional -->
-      <div class="small text-muted">
-        <p class="mb-1">📅 Fecha de ingreso: <%= @product.received_on&.strftime("%d/%m/%Y") %></p>
-        <% if @product.last_updated_at %>
-          <p class="mb-1">🔄 Última actualización: <%= @product.last_updated_at&.strftime("%d/%m/%Y %H:%M") %></p>
-        <% end %>
-      </div>
-
-      <!-- Botón volver -->
-      <div class="mt-4">
-        <%= link_to "← Volver a la tienda", storefront_path, class: "btn btn-outline-dark" %>
-      </div>
-    </div>
+    <% end %>
   </div>
 
-  <!-- DISCOS RELACIONADOS -->
-  <% if @related_products.any? %>
-    <hr class="my-5">
-    <h3 class="mb-4">🎶 Tal vez también te interese...</h3>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
-      <% @related_products.each do |product| %>
-        <div class="col">
-          <div class="card h-100 shadow-sm product-card">
-            <% if product.cover_image.attached? %>
-              <%= link_to storefront_product_path(product) do %>
-                <%= image_tag product.cover_image.variant(resize_to_fill: [200, 200]), class: "card-img-top" %>
-              <% end %>
-            <% end %>
-            <div class="card-body">
-              <h6 class="card-title">
-                <%= link_to product.name, storefront_product_path(product), class: "text-decoration-none text-dark" %>
-              </h6>
-              <p class="card-text small text-muted"><%= product.author %></p>
-              <span class="h6 text-success">$<%= number_with_precision(product.unit_price, precision: 2) %></span>
-            </div>
-          </div>
+  <!-- COLUMNA DERECHA: Información del producto -->
+  <div class="col-lg-6">
+    <h1 class="h3 h2-md mb-1"><%= @product.name %></h1>
+    <h4 class="h5 h4-md text-muted mb-3"><%= @product.author %></h4>
+
+    <!-- Badges de tipo y estado -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <span class="genre-pill">
+        <%= @product.media_type_vinyl? ? "Vinilo" : "CD" %>
+      </span>
+      <span class="genre-pill">
+        <%= @product.state_new_item? ? "Nuevo" : "Usado" %>
+      </span>
+    </div>
+
+    <!-- Géneros -->
+    <div class="mb-3">
+      <% @product.genres.each do |genre| %>
+        <%= link_to genre.name, storefront_path(genre_id: genre.id), class: "genre-pill text-decoration-none" %>
+      <% end %>
+    </div>
+
+    <hr>
+
+    <!-- Precio (responsive) -->
+    <div class="mb-3 mb-md-4">
+      <span class="h2 h1-md fw-bold">$<%= number_with_precision(@product.unit_price, precision: 2) %></span>
+    </div>
+
+    <!-- Stock -->
+    <div class="mb-3 mb-md-4">
+      <% if @product.stock > 0 %>
+        <div class="alert alert-dark py-2 mb-0">
+          <strong>Disponible</strong> - <%= @product.stock %> unidad<%= @product.stock > 1 ? 'es' : '' %> en stock
+        </div>
+      <% else %>
+        <div class="alert alert-primary py-2 mb-0">
+          <strong>Sin stock</strong> - Consultanos para más información
         </div>
       <% end %>
     </div>
-  <% end %>
+
+    <!-- Descripción -->
+    <div class="card mb-3 mb-md-4">
+      <div class="card-body p-2 p-sm-3">
+        <h5 class="card-title h6">Descripción</h5>
+        <p class="card-text small"><%= @product.description %></p>
+      </div>
+    </div>
+
+    <!-- Info adicional -->
+    <div class="small text-muted mb-3">
+      <p class="mb-1">Fecha de ingreso: <%= @product.received_on&.strftime("%d/%m/%Y") %></p>
+      <% if @product.last_updated_at %>
+        <p class="mb-0">Última actualización: <%= @product.last_updated_at&.strftime("%d/%m/%Y %H:%M") %></p>
+      <% end %>
+    </div>
+
+    <!-- Botón volver -->
+    <div class="d-grid d-sm-block">
+      <%= link_to "Volver al catálogo", storefront_path, class: "btn btn-outline-dark" %>
+    </div>
+  </div>
 </div>
 
-<style>
-  .badge-vinyl { background-color: #6c5ce7; }
-  .badge-cd { background-color: #00b894; }
-</style>
+<!-- DISCOS RELACIONADOS -->
+<% if @related_products.any? %>
+  <hr class="my-4 my-md-5">
+  <h3 class="h4 mb-3 mb-md-4">También te puede interesar</h3>
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-2 g-sm-3">
+    <% @related_products.each do |product| %>
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <% if product.cover_image.attached? %>
+            <%= link_to storefront_product_path(product) do %>
+              <%= image_tag product.cover_image.variant(resize_to_fill: [200, 200]), class: "card-img-top" %>
+            <% end %>
+          <% end %>
+          <div class="card-body p-2">
+            <h6 class="card-title small text-truncate mb-1">
+              <%= link_to product.name, storefront_product_path(product), class: "text-decoration-none text-dark" %>
+            </h6>
+            <p class="card-text small text-muted text-truncate mb-1"><%= product.author %></p>
+            <span class="small fw-bold">$<%= number_with_precision(product.unit_price, precision: 2) %></span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
