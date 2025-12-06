@@ -65,7 +65,12 @@
 
       <div class="d-flex gap-2">
         <% unless @product.retired? %>
-          <%= button_to "Dar de baja", soft_delete_backstore_product_path(@product), method: :patch, class: "btn btn-primary", data: { turbo_confirm: "¿Dar de baja este producto?" } %>
+          <%= button_to "Dar de baja",
+                        soft_delete_backstore_product_path(@product),
+                        method: :patch,
+                        class: "btn btn-primary",
+                        form: { data: { action: "submit->confirm-modal#open",
+                                        confirm_message: "¿Dar de baja este producto?" } } %>
         <% else %>
           <span class="badge bg-secondary align-self-center">Producto dado de baja</span>
         <% end %>

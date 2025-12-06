@@ -19,7 +19,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="app-body">
+  <body class="app-body" data-controller="confirm-modal">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
       <div class="container py-2">
         <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
@@ -57,5 +57,27 @@
         Valentín Nuñez, Uziel Juárez Piñeiro y Zoe Eguaras
       </div>
     </footer>
+
+    <div class="modal fade" tabindex="-1" data-confirm-modal-target="modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border border-2 border-dark rounded-4">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmar acción</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0" data-confirm-modal-target="message">
+              ¿Estás seguro de que querés continuar?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" data-confirm-modal-target="confirmButton" data-action="click->confirm-modal#confirm">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

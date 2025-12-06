@@ -25,7 +25,8 @@
                 <%= button_to "Eliminar", [:backstore, genre],
                               method: :delete,
                               class: "btn btn-outline-dark btn-sm",
-                              data: { confirm: "¿Estás seguro de que quieres eliminar este género?" } %>
+                              form: { data: { action: "submit->confirm-modal#open",
+                                              confirm_message: "¿Estás seguro de que quieres eliminar este género?" } } %>
               </div>
             </td>
           </tr>

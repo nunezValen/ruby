@@ -31,9 +31,11 @@
               </div>
               <% if can?(:destroy, user) && user.id != current_user.id %>
                 <div class="d-inline-flex gap-2 ms-3">
-                  <%= button_to "Eliminar", backstore_user_path(user), method: :delete, 
+                  <%= button_to "Eliminar", backstore_user_path(user),
+                                method: :delete,
                                 class: "btn btn-outline-dark btn-sm",
-                                data: { confirm: "¿Estás seguro de que quieres eliminar este usuario?" } %>
+                                form: { data: { action: "submit->confirm-modal#open",
+                                                confirm_message: "¿Estás seguro de que quieres eliminar este usuario?" } } %>
                 </div>
               <% end %>
             </td>
