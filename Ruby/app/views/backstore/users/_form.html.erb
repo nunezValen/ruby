@@ -1,7 +1,7 @@
 <%= form_with(model: user, url: user.new_record? ? backstore_users_path : backstore_user_path(user), class: "card shadow-sm p-4 border-0", local: true) do |form| %>
   <% if user.errors.any? %>
     <div class="alert alert-danger">
-      <h2 class="h5 mb-3"><%= pluralize(user.errors.count, "error") %> impiden guardar el usuario:</h2>
+      <h2 class="h5 mb-3"><%= user.errors.count %> error(es) impiden guardar el usuario:</h2>
       <ul class="mb-0">
         <% user.errors.each do |error| %>
           <li><%= error.full_message %></li>

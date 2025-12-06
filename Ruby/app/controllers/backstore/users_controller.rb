@@ -28,7 +28,7 @@ class Backstore::UsersController < Backstore::BaseController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to backstore_user_path(@user), notice: "User was successfully created." }
+        format.html { redirect_to backstore_user_path(@user), notice: "Usuario creado correctamente." }
         format.json { render :show, status: :created, location: @user }
       else
         Rails.logger.debug("[Backstore::UsersController#create] errors: #{@user.errors.full_messages.inspect}")
@@ -42,7 +42,7 @@ class Backstore::UsersController < Backstore::BaseController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to backstore_user_path(@user), notice: "User was successfully updated.", status: :see_other }
+        format.html { redirect_to backstore_user_path(@user), notice: "Usuario actualizado correctamente.", status: :see_other }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -56,7 +56,7 @@ class Backstore::UsersController < Backstore::BaseController
     @user.destroy!
 
     respond_to do |format|
-      format.html { redirect_to backstore_users_path, notice: "User was successfully destroyed.", status: :see_other }
+      format.html { redirect_to backstore_users_path, notice: "Usuario eliminado correctamente.", status: :see_other }
       format.json { head :no_content }
     end
   end

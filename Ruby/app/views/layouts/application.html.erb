@@ -28,17 +28,6 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
           <ul class="navbar-nav me-auto gap-2">
-            <li class="nav-item">
-              <%= link_to "Inventario", backstore_products_path, class: "nav-link#{current_page?(backstore_products_path) ? ' active' : ''}" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "Géneros", backstore_genres_path, class: "nav-link#{current_page?(backstore_genres_path) ? ' active' : ''}" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "Usuarios", backstore_users_path, class: "nav-link#{current_page?(backstore_users_path) ? ' active' : ''}" %>
-            </li>
-          </ul>
-
           <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
             <% if user_signed_in? %>
               <%= link_to "Mi Perfil", edit_backstore_user_path(current_user), class: "btn btn-outline-light w-100 w-lg-auto" %>

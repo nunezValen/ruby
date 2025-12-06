@@ -1,7 +1,7 @@
 <%= form_with(model: [:backstore, product], class: "card shadow-sm p-4 border-0", data: { controller: "product-state" }) do |form| %>
   <% if product.errors.any? %>
     <div class="alert alert-dark">
-      <h2 class="h5 mb-3"><%= pluralize(product.errors.count, "error") %> impiden guardar el producto:</h2>
+      <h2 class="h5 mb-3"><%= product.errors.count %> error(es) impiden guardar el producto:</h2>
       <ul class="mb-0">
         <% product.errors.each do |error| %>
           <li><%= error.full_message %></li>

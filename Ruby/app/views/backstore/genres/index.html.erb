@@ -1,16 +1,16 @@
 <p style="color: green"><%= notice %></p>
 
-<% content_for :title, "Genres" %>
+<% content_for :title, "Géneros" %>
 
-<h1>Genres</h1>
+<h1>Géneros</h1>
 
 <div id="genres">
   <% @genres.each do |genre| %>
     <%= render genre %>
     <p>
-      <%= link_to "Show this genre", [:backstore, genre] %>
+      <%= link_to "Ver este género", [:backstore, genre] %>
     </p>
   <% end %>
 </div>
 
-<%= link_to "New genre", new_backstore_genre_path %>
+<%= link_to "Nuevo género", new_backstore_genre_path %>

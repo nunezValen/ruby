@@ -3,8 +3,8 @@
 <%= render @genre %>
 
 <div>
-  <%= link_to "Edit this genre", edit_backstore_genre_path(@genre) %> |
-  <%= link_to "Back to genres", backstore_genres_path %>
+  <%= link_to "Editar este género", edit_backstore_genre_path(@genre) %> |
+  <%= link_to "Volver a géneros", backstore_genres_path %>
 
-  <%= button_to "Destroy this genre", [:backstore, @genre], method: :delete %>
+  <%= button_to "Eliminar este género", [:backstore, @genre], method: :delete %>
 </div>
