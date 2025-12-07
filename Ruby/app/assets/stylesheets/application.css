@@ -172,6 +172,11 @@ a:hover {
   color: var(--brand-white);
 }
 
+.alert .btn-close {
+  --bs-btn-close-color: #ffffff;
+  opacity: 1;
+}
+
 .image-preview {
   max-width: 300px;
   border: 2px solid var(--brand-black);
@@ -224,23 +229,14 @@ input[type="radio"]:checked {
 
 /* Pills for genre selection */
 .genre-pill .btn-close {
+  /* Por defecto negra sobre fondo blanco del chip */
+  --bs-btn-close-color: #000000;
   opacity: 1;
   padding: 0.15rem;
   margin: 0;
 }
 
-.app-footer {
-  background-image: url("Footer.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  color: var(--brand-white);
-  padding: 1.5rem 0;
-  border-top: 2px solid var(--brand-black);
+/* Cuando el chip está en hover (fondo negro), la cruz se vuelve blanca */
+.genre-pill:hover .btn-close {
+  --bs-btn-close-color: #ffffff;
 }
-
-.app-footer .container {
-  font-size: 0.9rem;
-}
-
-/* estilos de paginación están en pagination.css, importado arriba */
