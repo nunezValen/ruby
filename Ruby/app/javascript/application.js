@@ -2,3 +2,12 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "bootstrap"
+import "chartkick"
+import "Chart.bundle"
+
+// Configuración global de Chartkick (colores de la marca)
+if (window.Chartkick) {
+  window.Chartkick.options = {
+    colors: ["#c20406"], // rojo de la app
+  }
+}

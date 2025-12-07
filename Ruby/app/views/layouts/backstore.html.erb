@@ -32,6 +32,11 @@
             <li class="nav-item">
               <%= link_to "Ventas", backstore_sales_path, class: "nav-link#{current_page?(backstore_sales_path) ? ' active' : ''}" %>
             </li>
+            <% if can?(:read, :reports) %>
+              <li class="nav-item">
+                <%= link_to "Reportes", backstore_reports_path, class: "nav-link#{request.path.start_with?(backstore_reports_path) ? ' active' : ''}" %>
+              </li>
+            <% end %>
           </ul>
 
           <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">

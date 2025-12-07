@@ -35,6 +35,11 @@ class Ability
       can [:read, :update], User, id: user.id
     end
 
+    # Reportes de ventas (solo personal autorizado)
+    if user.administrador? || user.gerente?
+      can :read, :reports
+    end
+
     #
     # Restricción general:
     # NADIE puede cambiar su propio rol.

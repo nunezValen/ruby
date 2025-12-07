@@ -1,5 +1,7 @@
 puts "Eliminando datos existentes..."
 
+SaleItem.delete_all
+Sale.delete_all
 ProductGenre.delete_all
 Product.delete_all
 Genre.delete_all
@@ -188,4 +190,72 @@ albums.each do |album|
 end
 
 puts "Productos creados: #{Product.count}"
+
+# =========================================
+# Ventas de ejemplo
+# =========================================
+puts "Creando ventas de ejemplo..."
+
+employees = User.where(role: User.roles.keys).to_a
+products_for_sales = Product.active.where("stock > 0").to_a
+
+if employees.empty? || products_for_sales.empty?
+  puts "⚠️  No se crearán ventas porque faltan empleados o productos con stock."
+else
+  60.times do
+    employee = employees.sample
+    created_at = rand(1..180).days.ago.change(hour: rand(9..20), min: rand(0..59))
+
+    # 30% canceladas
+    is_cancelled = rand < 0.3
+    cancelled_at = is_cancelled ? [created_at + rand(1..5).hours, Time.current].min : nil
+
+    sale = Sale.new(
+      client_name:    "Cliente #{defined?(Faker) ? (Faker::Name.first_name rescue 'Demo') : 'Demo'}",
+      client_email:   "cliente#{rand(1000)}@example.com",
+      employee_name:  "#{employee.nombre} #{employee.apellido}".strip,
+      employee_email: employee.email,
+      cancelled:      is_cancelled,
+      cancelled_at:   cancelled_at,
+      created_at:     created_at,
+      updated_at:     created_at
+    )
+    # Evitar validación de "al menos un producto" al crear, ya que los items
+    # se agregan después en este mismo bloque.
+    sale.save!(validate: false)
+
+    used_product_ids = []
+    rand(1..3).times do
+      product = (products_for_sales - products_for_sales.select { |p| used_product_ids.include?(p.id) }).sample
+      break unless product
+
+      next if product.stock.to_i <= 0
+
+      quantity =
+        if product.state_used_item?
+          1
+        else
+          max_qty = [product.stock.to_i, 5].min
+          max_qty = 1 if max_qty < 1
+          rand(1..max_qty)
+        end
+
+      sale.sale_items.create!(
+        product:    product,
+        quantity:   quantity,
+        unit_price: product.unit_price
+      )
+
+      used_product_ids << product.id
+    end
+
+    if sale.sale_items.empty?
+      sale.destroy
+    end
+  end
+
+  puts "Ventas creadas: #{Sale.count}"
+  puts "Ítems de venta creados: #{SaleItem.count}"
+end
+
 puts "Seeds cargadas con éxito ✅"
