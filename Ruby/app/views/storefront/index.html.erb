@@ -9,7 +9,7 @@
     </div>
 
     <div class="collapse d-lg-block" id="filtrosCollapse">
-      <div class="card shadow-sm">
+      <div class="card shadow-sm rounded-4 overflow-hidden">
         <div class="card-header bg-dark text-white">
           <strong>Filtrar productos</strong>
         </div>
@@ -72,11 +72,11 @@
       <h1 class="h2 h1-md mb-0">Catálogo de discos</h1>
     </div>
 
-    <% if @products.any? %>
+      <% if @products.any? %>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-2 row-cols-xl-3 g-3">
         <% @products.each do |product| %>
           <div class="col">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
               <!-- Imagen de portada -->
               <% if product.cover_image.attached? %>
                 <%= link_to storefront_product_path(product) do %>
@@ -141,7 +141,7 @@
         <% end %>
       </div>
     <% else %>
-      <div class="card shadow-sm p-3 p-sm-4 text-center">
+      <div class="card shadow-sm rounded-4 p-3 p-sm-4 text-center">
         <h4 class="h5">No se encontraron productos</h4>
         <p class="mb-0 small">No hay productos que coincidan con tu búsqueda.</p>
         <%= link_to "Ver todos los productos", storefront_path, class: "btn btn-primary btn-sm mt-3" %>

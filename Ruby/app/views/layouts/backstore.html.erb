@@ -40,6 +40,10 @@
           </ul>
 
           <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
+            <%= link_to "Ir a la tienda", storefront_path, class: "btn btn-outline-light w-100 w-lg-auto" %>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
             <% if user_signed_in? %>
               <%= link_to "Mi Perfil", edit_backstore_user_path(current_user), class: "btn btn-outline-light w-100 w-lg-auto" %>
             <% end %>

@@ -24,4 +24,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Redirigir al backstore luego de iniciar sesión
+  def after_sign_in_path_for(resource)
+    backstore_products_path
+  end
+
 end

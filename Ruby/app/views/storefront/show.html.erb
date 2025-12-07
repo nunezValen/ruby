@@ -11,7 +11,7 @@
   <!-- COLUMNA IZQUIERDA: Imágenes y audio -->
   <div class="col-lg-6 mb-3 mb-lg-4">
     <!-- Imagen principal -->
-    <div class="card shadow-sm mb-3">
+    <div class="card shadow-sm rounded-4 overflow-hidden mb-3">
       <% if @product.cover_image.attached? %>
         <%= image_tag @product.cover_image.variant(resize_to_limit: [600, 600]), class: "card-img-top img-fluid", alt: @product.name %>
       <% else %>
@@ -32,7 +32,7 @@
 
     <!-- Audio de muestra (solo para usados) -->
     <% if @product.state_used_item? && @product.audio_preview.attached? %>
-      <div class="card">
+      <div class="card shadow-sm rounded-4 overflow-hidden">
         <div class="card-body p-2 p-sm-3">
           <h6 class="card-title small">Escuchar muestra del disco</h6>
           <p class="card-text small text-muted d-none d-sm-block">Este es un disco usado. Podés escuchar cómo suena:</p>
@@ -82,7 +82,7 @@
     </div>
 
     <!-- Descripción -->
-    <div class="card mb-3 mb-md-4">
+    <div class="card shadow-sm rounded-4 mb-3 mb-md-4">
       <div class="card-body p-2 p-sm-3">
         <h5 class="card-title h6">Descripción</h5>
         <p class="card-text small"><%= @product.description %></p>
@@ -108,7 +108,7 @@
   <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-2 g-sm-3">
     <% @related_products.each do |product| %>
       <div class="col">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
           <% if product.cover_image.attached? %>
             <%= link_to storefront_product_path(product) do %>
               <%= image_tag product.cover_image.variant(resize_to_fill: [200, 200]), class: "card-img-top" %>
