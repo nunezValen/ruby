@@ -33,3 +33,7 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+/vendor/bundle
+/node_modules
+*.sqlite3

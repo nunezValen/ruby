@@ -1,0 +1,166 @@
+<div class="row">
+  <!-- SIDEBAR: Filtros -->
+  <div class="col-lg-3 mb-4">
+    <!-- Botón para mostrar/ocultar filtros en móvil -->
+    <div class="d-lg-none mb-3">
+      <button class="btn btn-outline-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosCollapse">
+        Mostrar filtros
+      </button>
+    </div>
+
+    <div class="collapse d-lg-block" id="filtrosCollapse">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+          <strong>Filtrar productos</strong>
+        </div>
+        <div class="card-body">
+          <%= form_with url: storefront_path, method: :get, local: true do |f| %>
+            <div class="mb-3">
+              <label class="form-label small">Título del álbum</label>
+              <%= text_field_tag :title, params[:title], class: "form-control form-control-sm", placeholder: "Buscar título..." %>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small">Artista</label>
+              <%= text_field_tag :artist, params[:artist], class: "form-control form-control-sm", placeholder: "Buscar artista..." %>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small">Géneros</label>
+              <div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+                <% @genres.each do |genre| %>
+                  <div class="form-check">
+                    <%= check_box_tag "genre_ids[]", genre.id, 
+                        params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s),
+                        class: "form-check-input", id: "genre_#{genre.id}" %>
+                    <%= label_tag "genre_#{genre.id}", genre.name, class: "form-check-label small" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label class="form-label small">Tipo</label>
+                <%= select_tag :media_type, options_for_select([["Vinilo", "vinyl"], ["CD", "cd"]], params[:media_type]), include_blank: "Todos", class: "form-select form-select-sm" %>
+              </div>
+
+              <div class="col-6 mb-3">
+                <label class="form-label small">Estado</label>
+                <%= select_tag :state, options_for_select([["Nuevo", "new_item"], ["Usado", "used_item"]], params[:state]), include_blank: "Todos", class: "form-select form-select-sm" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small">Año de ingreso</label>
+              <%= number_field_tag :year, params[:year], class: "form-control form-control-sm", placeholder: "Ej: 2024", min: 1900, max: 2100 %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= submit_tag "Buscar", class: "btn btn-primary btn-sm" %>
+              <%= link_to "Limpiar filtros", storefront_path, class: "btn btn-outline-dark btn-sm" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Navegación por géneros (solo desktop) -->
+      <div class="card shadow-sm mt-3 d-none d-lg-block">
+        <div class="card-header bg-dark text-white">
+          <strong>Géneros</strong>
+        </div>
+        <div class="list-group list-group-flush">
+          <% @genres.each do |genre| %>
+            <% is_selected = params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s) %>
+            <%= link_to genre.name, 
+                storefront_path(genre_ids: [genre.id.to_s]), 
+                class: "list-group-item list-group-item-action #{'active' if is_selected}" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL: Grid de productos -->
+  <div class="col-lg-9">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+      <h1 class="h2 h1-md mb-0">Catálogo de discos</h1>
+    </div>
+
+    <% if @products.any? %>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-2 row-cols-xl-3 g-3">
+        <% @products.each do |product| %>
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <!-- Imagen de portada -->
+              <% if product.cover_image.attached? %>
+                <%= link_to storefront_product_path(product) do %>
+                  <%= image_tag product.cover_image.variant(resize_to_fill: [300, 300]), class: "card-img-top", alt: product.name %>
+                <% end %>
+              <% else %>
+                <%= link_to storefront_product_path(product) do %>
+                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="aspect-ratio: 1/1;">
+                    <span class="text-muted">Sin imagen</span>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <div class="card-body p-2 p-sm-3">
+                <h6 class="card-title mb-1 text-truncate">
+                  <%= link_to product.name, storefront_product_path(product), class: "text-decoration-none text-dark" %>
+                </h6>
+                <p class="card-text small text-muted mb-2 text-truncate"><%= product.author %></p>
+
+                <!-- Badges (máximo 5: tipo, estado y hasta 3 géneros) -->
+                <div class="d-flex flex-wrap gap-1 mb-2">
+                  <%= link_to (product.media_type_vinyl? ? "Vinilo" : "CD"), 
+                      storefront_path(media_type: (product.media_type_vinyl? ? "vinyl" : "cd")), 
+                      class: "genre-pill text-decoration-none #{'active' if params[:media_type] == (product.media_type_vinyl? ? 'vinyl' : 'cd')}", 
+                      style: "font-size: 0.7rem; padding: 0.1rem 0.5rem;" %>
+                  <%= link_to (product.state_new_item? ? "Nuevo" : "Usado"), 
+                      storefront_path(state: (product.state_new_item? ? "new_item" : "used_item")), 
+                      class: "genre-pill text-decoration-none #{'active' if params[:state] == (product.state_new_item? ? 'new_item' : 'used_item')}", 
+                      style: "font-size: 0.7rem; padding: 0.1rem 0.5rem;" %>
+                  <% product.genres.limit(3).each do |genre| %>
+                    <% is_selected = params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s) %>
+                    <%= link_to genre.name, 
+                        storefront_path(genre_ids: [genre.id.to_s]), 
+                        class: "genre-pill text-decoration-none #{'active' if is_selected}", 
+                        style: "font-size: 0.7rem; padding: 0.1rem 0.5rem;" %>
+                  <% end %>
+                </div>
+
+                <p class="card-text small text-muted d-none d-md-block" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                  <%= product.description %>
+                </p>
+              </div>
+
+              <div class="card-footer bg-white border-top-0 p-2 p-sm-3 pt-0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="h6 h5-sm mb-0">$<%= number_with_precision(product.unit_price, precision: 2) %></span>
+                  <small class="text-muted d-none d-sm-inline">
+                    <% if product.stock > 0 %>
+                      <span class="text-success"><%= product.stock %> disp.</span>
+                    <% else %>
+                      <span class="text-danger">Sin stock</span>
+                    <% end %>
+                  </small>
+                </div>
+              </div>
+
+              <div class="card-footer bg-transparent pt-0 p-2 p-sm-3">
+                <%= link_to "Ver detalle", storefront_product_path(product), class: "btn btn-outline-dark btn-sm w-100" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="card shadow-sm p-3 p-sm-4 text-center">
+        <h4 class="h5">No se encontraron productos</h4>
+        <p class="mb-0 small">No hay productos que coincidan con tu búsqueda.</p>
+        <%= link_to "Ver todos los productos", storefront_path, class: "btn btn-primary btn-sm mt-3" %>
+      </div>
+    <% end %>
+  </div>
+</div>
