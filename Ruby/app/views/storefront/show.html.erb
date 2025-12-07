@@ -9,11 +9,14 @@
 
 <div class="row">
   <!-- COLUMNA IZQUIERDA: Imágenes y audio -->
-  <div class="col-lg-6 mb-3 mb-lg-4">
+  <div class="col-lg-6 mb-3 mb-lg-4" data-controller="image-gallery">
     <!-- Imagen principal -->
     <div class="card shadow-sm rounded-4 overflow-hidden mb-3">
       <% if @product.cover_image.attached? %>
-        <%= image_tag @product.cover_image.variant(resize_to_limit: [600, 600]), class: "card-img-top img-fluid", alt: @product.name %>
+        <%= image_tag @product.cover_image.variant(resize_to_limit: [600, 600]),
+                      class: "card-img-top img-fluid",
+                      alt: @product.name,
+                      data: { "image-gallery-target": "main" } %>
       <% else %>
         <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="aspect-ratio: 1/1; max-height: 400px;">
           <span class="text-muted">Sin imagen</span>
@@ -21,11 +24,31 @@
       <% end %>
     </div>
 
-    <!-- Galería de imágenes adicionales -->
-    <% if @product.gallery.attached? && @product.gallery.any? %>
+    <!-- Galería de imágenes (incluye portada como primera) -->
+    <% if @product.cover_image.attached? || (@product.gallery.attached? && @product.gallery.any?) %>
       <div class="d-flex flex-wrap gap-2 mb-3">
-        <% @product.gallery.each do |imagen| %>
-          <%= image_tag imagen.variant(resize_to_fill: [60, 60]), class: "rounded image-preview", style: "width: 60px; height: 60px; object-fit: cover;" %>
+        <% if @product.cover_image.attached? %>
+          <%= image_tag @product.cover_image.variant(resize_to_fill: [60, 60]),
+                        class: "rounded image-preview",
+                        style: "width: 60px; height: 60px; object-fit: cover; cursor: pointer;",
+                        data: {
+                          "image-gallery-target": "thumbnail",
+                          "image-gallery-url": url_for(@product.cover_image.variant(resize_to_limit: [600, 600])),
+                          action: "mouseenter->image-gallery#showFromThumb click->image-gallery#showFromThumb"
+                        } %>
+        <% end %>
+
+        <% if @product.gallery.attached? && @product.gallery.any? %>
+          <% @product.gallery.each do |imagen| %>
+            <%= image_tag imagen.variant(resize_to_fill: [60, 60]),
+                          class: "rounded image-preview",
+                          style: "width: 60px; height: 60px; object-fit: cover; cursor: pointer;",
+                          data: {
+                            "image-gallery-target": "thumbnail",
+                            "image-gallery-url": url_for(imagen.variant(resize_to_limit: [600, 600])),
+                            action: "mouseenter->image-gallery#showFromThumb click->image-gallery#showFromThumb"
+                          } %>
+          <% end %>
         <% end %>
       </div>
     <% end %>

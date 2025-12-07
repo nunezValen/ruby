@@ -176,6 +176,13 @@ a:hover {
   max-width: 300px;
   border: 2px solid var(--brand-black);
   border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.image-preview.image-thumb-active {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 2px rgba(194, 4, 6, 0.4);
+  transform: translateY(-2px) scale(1.03);
 }
 
 /* Override Bootstrap focus colors to brand red */
