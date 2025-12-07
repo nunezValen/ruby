@@ -63,7 +63,7 @@ a:hover {
 
 @media (max-width: 576px) {
   .navbar-logo {
-    height: 40px;
+    height: 80px;
   }
 }
 
@@ -75,6 +75,17 @@ a:hover {
 .navbar .nav-link.active,
 .navbar .nav-link:hover {
   color: var(--brand-white) !important;
+}
+
+/* Botones (y formularios) de la navbar en mobile: ancho completo */
+.navbar .button_to {
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .navbar .button_to {
+    width: auto;
+  }
 }
 
 .btn-primary,

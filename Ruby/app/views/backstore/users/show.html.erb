@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="mb-0"><%= @user.nombre %> <%= @user.apellido %></h1>
-  <div class="d-flex gap-2">
+  <div class="d-flex gap-2 ms-4">
     <%= link_to "Volver", backstore_users_path, class: "btn btn-outline-dark" %>
     <%= link_to "Editar", edit_backstore_user_path(@user), class: "btn btn-primary" %>
   </div>
