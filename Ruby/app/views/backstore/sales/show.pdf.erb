@@ -37,7 +37,7 @@
         <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">Estado:</td>
         <td style="padding: 8px; border: 1px solid #000;">
           <% if @sale.cancelled_at? %>
-            Cancelada (<%= @sale.cancelled_at&.strftime("%d/%m/%Y") %>)
+            Cancelada
           <% else %>
             Activa
           <% end %>

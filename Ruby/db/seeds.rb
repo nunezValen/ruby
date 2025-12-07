@@ -193,10 +193,11 @@ puts "Productos creados: #{Product.count}"
 # =========================================
 # Ventas de ejemplo
 # =========================================
-puts "Creando ventas de ejemplo..."
+puts "Creando ventas de ejemplo (solo productos NUEVOS)..."
 
 employees = User.where(role: User.roles.keys).to_a
-products_for_sales = Product.active.where("stock > 0").to_a
+# Solo productos activos, NUEVOS y con stock
+products_for_sales = Product.active.where(state: :new_item).where("stock > 0").to_a
 
 if employees.empty? || products_for_sales.empty?
   puts "⚠️  No se crearán ventas porque faltan empleados o productos con stock."
@@ -230,14 +231,11 @@ else
 
       next if product.stock.to_i <= 0
 
-      quantity =
-        if product.state_used_item?
-          1
-        else
-          max_qty = [product.stock.to_i, 5].min
-          max_qty = 1 if max_qty < 1
-          rand(1..max_qty)
-        end
+      # Como solo usamos productos NUEVOS en las ventas de ejemplo,
+      # la cantidad puede ser entre 1 y un máximo acotado por el stock.
+      max_qty = [product.stock.to_i, 5].min
+      max_qty = 1 if max_qty < 1
+      quantity = rand(1..max_qty)
 
       sale.sale_items.create!(
         product:    product,
