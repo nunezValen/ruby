@@ -3,7 +3,7 @@ class Backstore::GenresController < Backstore::BaseController
 
   # GET /genres or /genres.json
   def index
-    @genres = Genre.all
+    @genres = Genre.order(:name).page(params[:page]).per(20)
   end
 
   # GET /genres/new

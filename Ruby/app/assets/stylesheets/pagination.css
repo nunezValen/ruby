@@ -1,0 +1,48 @@
+/* -----------------------------
+   Paginación (Kaminari + estilo limpio)
+   ----------------------------- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem; /* espacio entre botones */
+  padding: 0;
+  list-style: none;
+}
+
+.pagination a,
+.pagination span {
+  display: flex; /* para centrar número/texto */
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  font-size: 1rem;
+}
+
+.pagination a {
+  background-color: transparent;
+  color: var(--brand-red);
+  border-radius: 10px;
+  border: 2px solid var(--brand-red);
+  padding: 0.5rem 0.75rem;
+}
+
+.pagination a:hover {
+  background-color: var(--brand-red);
+  color: var(--brand-white);
+}
+
+.pagination span.current {
+  background-color: var(--brand-red);
+  color: var(--brand-white);
+  border-color: var(--brand-red);
+  padding: 0.5rem 0.75rem;
+}
+
+.pagination span.gap {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--brand-black);
+}

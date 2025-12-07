@@ -4,7 +4,7 @@
 </div>
 
 <% if @users.any? %>
-  <div class="table-responsive card shadow-sm">
+  <div class="table-responsive card shadow-sm mb-3">
     <table class="table mb-0">
       <thead>
         <tr>
@@ -43,6 +43,10 @@
         <% end %>
       </tbody>
     </table>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <%= paginate @users %>
   </div>
 <% else %>
   <div class="card shadow-sm p-4 text-center">

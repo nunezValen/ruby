@@ -6,7 +6,7 @@ class Backstore::ProductsController < Backstore::BaseController
   def index
     @filter = params[:filter] == "retired" ? "retired" : "active"
     scope = @filter == "retired" ? Product.retired : Product.active
-    @products = scope.order(:name)
+    @products = scope.order(:name).page(params[:page]).per(20)
   end
 
   # GET /products/1 or /products/1.json

@@ -5,7 +5,7 @@ class Backstore::SalesController < Backstore::BaseController
   def index
     @filter = params[:filter] == "cancelled" ? "cancelled" : "active"
     scope = @filter == "cancelled" ? Sale.cancelled : Sale.active
-    @sales = scope.order(created_at: :desc)
+    @sales = scope.order(created_at: :desc).page(params[:page]).per(20)
   end
 
   # GET /sales/new

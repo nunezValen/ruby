@@ -4,7 +4,7 @@ class Backstore::UsersController < Backstore::BaseController
 
   # GET /backstore/users or /backstore/users.json
   def index
-    @users = User.all
+    @users = User.order(created_at: :desc).page(params[:page]).per(20)
   end
 
   # GET /backstore/users/1 or /backstore/users/1.json
