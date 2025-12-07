@@ -1,6 +1,5 @@
 class StorefrontController < ApplicationController
   # El storefront es PÚBLICO - no requiere login
-  layout "storefront"
 
   def index
     @products = Product.active

@@ -30,6 +30,23 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
           <ul class="navbar-nav me-auto gap-2">
+            <li class="nav-item">
+              <%= link_to "Catálogo", storefront_path, class: "nav-link#{current_page?(storefront_path) && params[:media_type].blank? && params[:state].blank? ? ' active' : ''}" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Vinilos", storefront_path(media_type: "vinyl"), class: "nav-link#{params[:media_type] == 'vinyl' ? ' active' : ''}" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "CDs", storefront_path(media_type: "cd"), class: "nav-link#{params[:media_type] == 'cd' ? ' active' : ''}" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Nuevos", storefront_path(state: "new_item"), class: "nav-link#{params[:state] == 'new_item' ? ' active' : ''}" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Usados", storefront_path(state: "used_item"), class: "nav-link#{params[:state] == 'used_item' ? ' active' : ''}" %>
+            </li>
+          </ul>
+
           <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
             <% if user_signed_in? %>
               <%= link_to "Mi Perfil", edit_backstore_user_path(current_user), class: "btn btn-outline-light w-100 w-lg-auto" %>
