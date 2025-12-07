@@ -63,21 +63,6 @@
           <% end %>
         </div>
       </div>
-
-      <!-- Navegación por géneros (solo desktop) -->
-      <div class="card shadow-sm mt-3 d-none d-lg-block">
-        <div class="card-header bg-dark text-white">
-          <strong>Géneros</strong>
-        </div>
-        <div class="list-group list-group-flush">
-          <% @genres.each do |genre| %>
-            <% is_selected = params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s) %>
-            <%= link_to genre.name, 
-                storefront_path(genre_ids: [genre.id.to_s]), 
-                class: "list-group-item list-group-item-action #{'active' if is_selected}" %>
-          <% end %>
-        </div>
-      </div>
     </div>
   </div>
 

@@ -58,16 +58,10 @@
       <%= link_to (@product.state_new_item? ? "Nuevo" : "Usado"), 
           storefront_path(state: (@product.state_new_item? ? "new_item" : "used_item")), 
           class: "genre-pill text-decoration-none" %>
-    </div>
-
-    <!-- Géneros -->
-    <div class="mb-3">
       <% @product.genres.each do |genre| %>
         <%= link_to genre.name, storefront_path(genre_ids: [genre.id.to_s]), class: "genre-pill text-decoration-none" %>
       <% end %>
     </div>
-
-    <hr>
 
     <!-- Precio (responsive) -->
     <div class="mb-3 mb-md-4">
@@ -98,9 +92,6 @@
     <!-- Info adicional -->
     <div class="small text-muted mb-3">
       <p class="mb-1">Fecha de ingreso: <%= @product.received_on&.strftime("%d/%m/%Y") %></p>
-      <% if @product.last_updated_at %>
-        <p class="mb-0">Última actualización: <%= @product.last_updated_at&.strftime("%d/%m/%Y %H:%M") %></p>
-      <% end %>
     </div>
 
     <!-- Botón volver -->
