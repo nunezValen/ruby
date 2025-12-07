@@ -42,7 +42,7 @@ class StorefrontController < ApplicationController
       end
     end
 
-    @products = @products.includes(:genres, cover_image_attachment: :blob).order(created_at: :desc)
+    @products = @products.includes(:genres, cover_image_attachment: :blob).order(created_at: :desc).page(params[:page]).per(12)
     @genres = Genre.order(:name)
   end
 

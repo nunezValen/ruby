@@ -140,6 +140,10 @@
           </div>
         <% end %>
       </div>
+
+      <div class="d-flex justify-content-center mt-4">
+        <%= paginate @products %>
+      </div>
     <% else %>
       <div class="card shadow-sm rounded-4 p-3 p-sm-4 text-center">
         <h4 class="h5">No se encontraron productos</h4>
