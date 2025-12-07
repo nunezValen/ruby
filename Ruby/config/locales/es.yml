@@ -4,13 +4,33 @@ es:
       default: "%d/%m/%Y"
       short: "%d %b"
       long: "%d de %B de %Y"
+    abbr_month_names:
+      - 
+      - ene
+      - feb
+      - mar
+      - abr
+      - may
+      - jun
+      - jul
+      - ago
+      - sep
+      - oct
+      - nov
+      - dic
+
   time:
     formats:
       default: "%d/%m/%Y %H:%M"
       short: "%d %b %H:%M"
       long: "%d de %B de %Y %H:%M"
+
   datetime:
     formats:
       default: "%d/%m/%Y %H:%M"
+
+  errors:
+    messages:
+      taken: "ya está en uso"
 
 

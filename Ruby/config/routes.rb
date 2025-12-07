@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  # Excluir registrations de Devise, usamos UsersController para crear usuarios
-  devise_for :users, skip: [:registrations]
+  # Excluir registrations de Devise, usamos UsersController para crear usuarios, y passwords para resetear contraseñas
+  devise_for :users, skip: [:registrations, :passwords]
 
   # ROOT = Storefront público
   root to: 'storefront#index'

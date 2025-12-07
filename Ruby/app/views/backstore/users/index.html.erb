@@ -27,8 +27,12 @@
             <td class="text-end">
               <div class="d-inline-flex gap-2">
                 <%= link_to "Ver", backstore_user_path(user), class: "btn btn-outline-dark btn-sm" %>
-                <%= link_to "Editar", edit_backstore_user_path(user), class: "btn btn-outline-dark btn-sm" %>
+
+                <% if can?(:update, user) %>
+                  <%= link_to "Editar", edit_backstore_user_path(user), class: "btn btn-outline-dark btn-sm" %>
+                <% end %>
               </div>
+
               <% if can?(:destroy, user) && user.id != current_user.id %>
                 <div class="d-inline-flex gap-2 ms-3">
                   <%= button_to "Eliminar", backstore_user_path(user),

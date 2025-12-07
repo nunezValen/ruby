@@ -37,12 +37,6 @@
             <th scope="row">Última modificación</th>
             <td><%= l(@user.updated_at, format: :short) %></td>
           </tr>
-          <% if @user.reset_password_sent_at %>
-            <tr>
-              <th scope="row">Reset password enviado</th>
-              <td><%= l(@user.reset_password_sent_at, format: :short) %></td>
-            </tr>
-          <% end %>
         </tbody>
       </table>
 

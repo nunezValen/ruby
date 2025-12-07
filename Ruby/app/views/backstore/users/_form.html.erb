@@ -39,12 +39,21 @@
       </div>
     <% end %>
 
-    <%# show role selector only when creating and when current_user is administrador %>
-    <% if user.new_record? && current_user&.administrador? %>
-      <div class="col-md-12">
-        <%= form.label :role, "Rol", class: "form-label" %>
-        <%= form.select :role, User.roles.keys.map { |k| [k.humanize, k] }, include_blank: false, class: "form-select" %>
-      </div>
+    <% if user.new_record? %>
+    <div class="col-md-12">
+      <%= form.label :role, "Rol", class: "form-label" %>
+
+      <%# Definir opciones según rol del usuario actual %>
+      <% roles =
+        if current_user.administrador?
+          User.roles.keys
+        elsif current_user.gerente?
+          ['gerente', 'empleado']
+        end
+      %>
+
+      <%= form.select :role, roles.map { |k| [k.humanize, k] }, include_blank: false, class: "form-select" %>
+    </div>
     <% end %>
   </div>
 

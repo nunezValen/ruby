@@ -23,16 +23,12 @@ class Ability
 
     elsif user.empleado?
       # PRODUCTOS y VENTAS → puede hacer todo
-      # TODO: Descomentar cuando se creen los modelos Product y Sale
-      # can :manage, Product
-      # can :manage, Sale
 
       # USUARIOS → no puede gestionar ninguno, ni ver el listado
-      cannot :manage, User
-      cannot :index, User  # No puede ver el listado de usuarios
-
       # PERO puede editar su propia cuenta (excepto rol)
-      can [:read, :update], User, id: user.id
+      can :show,   User, id: user.id
+      can :edit,   User, id: user.id
+      can :update, User, id: user.id
     end
 
     # Reportes de ventas (solo personal autorizado)

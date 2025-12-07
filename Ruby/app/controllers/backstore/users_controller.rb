@@ -75,7 +75,7 @@ class Backstore::UsersController < Backstore::BaseController
     if action_name == "create"
       base += [:password, :password_confirmation]
       # Permitir role solo si es administrador
-      if current_user&.administrador?
+      if current_user&.administrador? || current_user&.gerente?
         params.require(:user).permit(*base, :role)
       else
         params.require(:user).permit(*base)

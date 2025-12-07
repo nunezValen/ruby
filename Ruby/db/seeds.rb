@@ -25,7 +25,6 @@ usuarios_data = [
   { nombre: "Carla",   apellido: "Empleado",  email: "carla.empleado@example.com", role: :empleado },
   { nombre: "Nico",    apellido: "Empleado",  email: "nico.empleado@example.com",  role: :empleado },
   { nombre: "Paula",   apellido: "Empleado",  email: "paula.empleado@example.com", role: :empleado },
-  # Mantengo los que ya tenías
   { nombre: "Gero",    apellido: "Manager",   email: "gerente@example.com",        role: :gerente },
   { nombre: "Emp",     apellido: "Worker",    email: "empleado@example.com",       role: :empleado }
 ]
