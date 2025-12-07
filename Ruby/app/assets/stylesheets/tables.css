@@ -1,0 +1,16 @@
+/* Separación sutil de columnas en tablas */
+
+.table thead th,
+.table tbody td {
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.table thead th:last-child,
+.table tbody td:last-child {
+  border-right: none;
+}
+
+/* Un poco de resalte al pasar el mouse sin ser muy fuerte */
+.table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
