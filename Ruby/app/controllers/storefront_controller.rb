@@ -6,12 +6,12 @@ class StorefrontController < ApplicationController
 
     # Filtro por título del álbum
     if params[:title].present?
-      @products = @products.where("LOWER(name) LIKE ?", "%#{params[:title].downcase}%")
+      @products = @products.where("LOWER(products.name) LIKE ?", "%#{params[:title].downcase}%")
     end
 
     # Filtro por artista
     if params[:artist].present?
-      @products = @products.where("LOWER(author) LIKE ?", "%#{params[:artist].downcase}%")
+      @products = @products.where("LOWER(products.author) LIKE ?", "%#{params[:artist].downcase}%")
     end
 
     # Filtro por tipo (vinilo o CD)
