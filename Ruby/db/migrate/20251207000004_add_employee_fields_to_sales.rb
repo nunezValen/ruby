@@ -1,11 +1,13 @@
 class AddEmployeeFieldsToSales < ActiveRecord::Migration[8.1]
   def change
-    # Si la tabla ya tiene user_id, lo eliminamos (o lo mantenemos si prefieres)
-    # Por ahora, agregamos las columnas employee_email y employee_name
-    add_column :sales, :employee_email, :string, null: false, default: ""
-    add_column :sales, :employee_name, :string, null: false, default: ""
-    
-    # Si existe user_id, podemos eliminarlo después de migrar los datos
-    # remove_column :sales, :user_id, :integer if column_exists?(:sales, :user_id)
+    # Agregamos los campos del empleado solo si aún no existen para evitar
+    # errores de "duplicate column name" en bases ya migradas.
+    unless column_exists?(:sales, :employee_email)
+      add_column :sales, :employee_email, :string, null: false, default: ""
+    end
+
+    unless column_exists?(:sales, :employee_name)
+      add_column :sales, :employee_name, :string, null: false, default: ""
+    end
   end
 end

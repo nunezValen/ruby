@@ -14,6 +14,7 @@ class Sale < ApplicationRecord
   validates :client_name, :client_email, presence: true
   validates :client_email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validate :at_least_one_sale_item
+  validate :no_duplicate_products
   validate :cancelled_cannot_be_reverted, on: :update
 
   # ---------------------------
@@ -79,6 +80,16 @@ class Sale < ApplicationRecord
   def at_least_one_sale_item
     if sale_items.empty? || sale_items.all? { |item| item.marked_for_destruction? || item.product_id.blank? }
       errors.add(:base, "Debe seleccionar al menos un producto")
+    end
+  end
+
+   def no_duplicate_products
+    # Ignoramos items sin producto o marcados para destrucción
+    product_ids = sale_items.reject { |item| item.marked_for_destruction? || item.product_id.blank? }
+                            .map(&:product_id)
+
+    if product_ids.uniq.size != product_ids.size
+      errors.add(:base, "No se puede agregar el mismo producto más de una vez en la misma venta")
     end
   end
 

@@ -15,10 +15,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_07_000007) do
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.integer "position", default: 0, null: false
     t.bigint "record_id", null: false
     t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index ["record_type", "record_id", "name", "position"], name: "index_active_storage_attachments_on_position"
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -59,6 +61,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_07_000007) do
 
   create_table "products", force: :cascade do |t|
     t.string "author"
+    t.bigint "cover_image_id"
     t.datetime "created_at", null: false
     t.text "description"
     t.datetime "last_updated_at"
@@ -71,6 +74,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_07_000007) do
     t.integer "stock"
     t.decimal "unit_price", precision: 10, scale: 2
     t.datetime "updated_at", null: false
+    t.index ["cover_image_id"], name: "index_products_on_cover_image_id"
   end
 
   create_table "sale_items", force: :cascade do |t|
@@ -90,8 +94,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_07_000007) do
     t.string "client_email"
     t.string "client_name"
     t.datetime "created_at", null: false
-    t.string "employee_email", default: "", null: false
-    t.string "employee_name", default: "", null: false
+    t.string "employee_email", null: false
+    t.string "employee_name", null: false
     t.datetime "updated_at", null: false
   end
 
