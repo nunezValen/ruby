@@ -3,7 +3,7 @@ class StorefrontController < ApplicationController
   layout "storefront"
 
   def index
-    @products = Product.active.includes(:genres, cover_image_attachment: :blob)
+    @products = Product.active
 
     # Filtro por título del álbum
     if params[:title].present?
@@ -25,17 +25,25 @@ class StorefrontController < ApplicationController
       @products = @products.where(state: params[:state])
     end
 
-    # Filtro por género
-    if params[:genre_id].present?
-      @products = @products.joins(:genres).where(genres: { id: params[:genre_id] })
-    end
-
     # Filtro por año
     if params[:year].present?
       @products = @products.where("strftime('%Y', received_on) = ?", params[:year].to_s)
     end
 
-    @products = @products.distinct.order(created_at: :desc)
+    # Filtro por géneros (múltiples) - Lógica AND: debe tener TODOS los géneros seleccionados
+    if params[:genre_ids].present?
+      genre_ids = Array(params[:genre_ids]).reject(&:blank?).map(&:to_i)
+      if genre_ids.any?
+        # Usamos group y having para asegurar que el producto tenga TODOS los géneros
+        @products = @products
+          .joins(:genres)
+          .where(genres: { id: genre_ids })
+          .group('products.id')
+          .having('COUNT(DISTINCT genres.id) = ?', genre_ids.count)
+      end
+    end
+
+    @products = @products.includes(:genres, cover_image_attachment: :blob).order(created_at: :desc)
     @genres = Genre.order(:name)
   end
 

@@ -52,18 +52,18 @@
 
     <!-- Badges de tipo y estado -->
     <div class="d-flex flex-wrap gap-2 mb-3">
-      <span class="genre-pill">
-        <%= @product.media_type_vinyl? ? "Vinilo" : "CD" %>
-      </span>
-      <span class="genre-pill">
-        <%= @product.state_new_item? ? "Nuevo" : "Usado" %>
-      </span>
+      <%= link_to (@product.media_type_vinyl? ? "Vinilo" : "CD"), 
+          storefront_path(media_type: (@product.media_type_vinyl? ? "vinyl" : "cd")), 
+          class: "genre-pill text-decoration-none" %>
+      <%= link_to (@product.state_new_item? ? "Nuevo" : "Usado"), 
+          storefront_path(state: (@product.state_new_item? ? "new_item" : "used_item")), 
+          class: "genre-pill text-decoration-none" %>
     </div>
 
     <!-- Géneros -->
     <div class="mb-3">
       <% @product.genres.each do |genre| %>
-        <%= link_to genre.name, storefront_path(genre_id: genre.id), class: "genre-pill text-decoration-none" %>
+        <%= link_to genre.name, storefront_path(genre_ids: [genre.id.to_s]), class: "genre-pill text-decoration-none" %>
       <% end %>
     </div>
 

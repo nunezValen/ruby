@@ -26,8 +26,17 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label small">Género</label>
-              <%= select_tag :genre_id, options_from_collection_for_select(@genres, :id, :name, params[:genre_id]), include_blank: "Todos los géneros", class: "form-select form-select-sm" %>
+              <label class="form-label small">Géneros</label>
+              <div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+                <% @genres.each do |genre| %>
+                  <div class="form-check">
+                    <%= check_box_tag "genre_ids[]", genre.id, 
+                        params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s),
+                        class: "form-check-input", id: "genre_#{genre.id}" %>
+                    <%= label_tag "genre_#{genre.id}", genre.name, class: "form-check-label small" %>
+                  </div>
+                <% end %>
+              </div>
             </div>
 
             <div class="row">
@@ -62,7 +71,10 @@
         </div>
         <div class="list-group list-group-flush">
           <% @genres.each do |genre| %>
-            <%= link_to genre.name, storefront_path(genre_id: genre.id), class: "list-group-item list-group-item-action #{'active' if params[:genre_id].to_s == genre.id.to_s}" %>
+            <% is_selected = params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s) %>
+            <%= link_to genre.name, 
+                storefront_path(genre_ids: [genre.id.to_s]), 
+                class: "list-group-item list-group-item-action #{'active' if is_selected}" %>
           <% end %>
         </div>
       </div>
@@ -100,14 +112,23 @@
                 </h6>
                 <p class="card-text small text-muted mb-2 text-truncate"><%= product.author %></p>
 
-                <!-- Badges -->
+                <!-- Badges (máximo 5: tipo, estado y hasta 3 géneros) -->
                 <div class="d-flex flex-wrap gap-1 mb-2">
-                  <span class="genre-pill" style="font-size: 0.7rem; padding: 0.1rem 0.5rem;">
-                    <%= product.media_type_vinyl? ? "Vinilo" : "CD" %>
-                  </span>
-                  <span class="genre-pill" style="font-size: 0.7rem; padding: 0.1rem 0.5rem;">
-                    <%= product.state_new_item? ? "Nuevo" : "Usado" %>
-                  </span>
+                  <%= link_to (product.media_type_vinyl? ? "Vinilo" : "CD"), 
+                      storefront_path(media_type: (product.media_type_vinyl? ? "vinyl" : "cd")), 
+                      class: "genre-pill text-decoration-none #{'active' if params[:media_type] == (product.media_type_vinyl? ? 'vinyl' : 'cd')}", 
+                      style: "font-size: 0.7rem; padding: 0.1rem 0.5rem;" %>
+                  <%= link_to (product.state_new_item? ? "Nuevo" : "Usado"), 
+                      storefront_path(state: (product.state_new_item? ? "new_item" : "used_item")), 
+                      class: "genre-pill text-decoration-none #{'active' if params[:state] == (product.state_new_item? ? 'new_item' : 'used_item')}", 
+                      style: "font-size: 0.7rem; padding: 0.1rem 0.5rem;" %>
+                  <% product.genres.limit(3).each do |genre| %>
+                    <% is_selected = params[:genre_ids].present? && Array(params[:genre_ids]).include?(genre.id.to_s) %>
+                    <%= link_to genre.name, 
+                        storefront_path(genre_ids: [genre.id.to_s]), 
+                        class: "genre-pill text-decoration-none #{'active' if is_selected}", 
+                        style: "font-size: 0.7rem; padding: 0.1rem 0.5rem;" %>
+                  <% end %>
                 </div>
 
                 <p class="card-text small text-muted d-none d-md-block" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
