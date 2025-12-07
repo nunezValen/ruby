@@ -1,5 +1,13 @@
-/* Separación sutil de columnas en tablas */
+/* Contenedor responsive para todas las tablas */
+.table-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
 
+/* Separación sutil de columnas en tablas */
 .table thead th,
 .table tbody td {
   border-right: 1px solid rgba(0, 0, 0, 0.08);
@@ -13,4 +21,9 @@
 /* Un poco de resalte al pasar el mouse sin ser muy fuerte */
 .table tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Que las acciones no se apilen en múltiples líneas */
+.table td.text-end {
+  white-space: nowrap;
 }
