@@ -240,3 +240,17 @@ input[type="radio"]:checked {
 .genre-pill:hover .btn-close {
   --bs-btn-close-color: #ffffff;
 }
+
+.app-footer {
+  background-image: url("Footer.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: var(--brand-white);
+  padding: 1.5rem 0;
+  border-top: 2px solid var(--brand-black);
+}
+
+.app-footer .container {
+  font-size: 0.9rem;
+}
